@@ -145,7 +145,7 @@ const Profile = () => {
     if (err) return;
     setErrText(initialErrText);
 
-    await dispatch(userActions.userUpdate(data))
+    dispatch(userActions.userUpdate(data))
       .unwrap()
       .then(() => {
         setIsDisable(false);
@@ -222,7 +222,7 @@ const Profile = () => {
           _id: user?._id,
           image: result,
         });
-        await dispatch(userChangeAvatar({ _id: user?._id, avatar: result }));
+        dispatch(userChangeAvatar({ _id: user?._id, avatar: result }));
         setImageSelected(result);
       } catch (error) {
       } finally {

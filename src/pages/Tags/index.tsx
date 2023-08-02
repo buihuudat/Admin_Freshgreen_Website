@@ -25,13 +25,13 @@ const Tags = () => {
       settagErrText("Bạn chưa nhập thêm thể loại");
       return;
     }
-    await dispatch(tagActions.create({ name: tag }));
+    dispatch(tagActions.create({ name: tag }));
     setTag("");
   };
 
   const handleDelete = async (tag: TagActionsType) => {
     setIsPending(true);
-    await dispatch(tagActions.delete(tag));
+    dispatch(tagActions.delete(tag));
     setIsPending(false);
   };
   return (

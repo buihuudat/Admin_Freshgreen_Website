@@ -27,13 +27,13 @@ const Categories = () => {
       setCategoryErrText("Bạn chưa nhập thêm thể loại");
       return;
     }
-    await dispatch(categoryActions.create({ name: category }));
+    dispatch(categoryActions.create({ name: category }));
     setCategory("");
   };
 
   const handleDelete = async (category: CategoryType) => {
     setIsPending(true);
-    await dispatch(categoryActions.delete(category));
+    dispatch(categoryActions.delete(category));
     setIsPending(false);
   };
   return (

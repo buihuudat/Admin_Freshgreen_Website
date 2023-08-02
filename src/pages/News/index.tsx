@@ -6,7 +6,7 @@ import NewsList from "./components/NewsList";
 import { useEffect, useMemo, useState } from "react";
 import { newsActions } from "../../actions/newsActions";
 import Search from "../../components/common/Search";
-import { setProductModal } from "../../redux/slices/productSlice";
+import { setNewsModel } from "../../redux/slices/newsSlice";
 
 const News = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -18,7 +18,7 @@ const News = () => {
   }, [dispatch]);
 
   const handleOpenModel = () => {
-    dispatch(setProductModal({ open: true }));
+    dispatch(setNewsModel({ open: true }));
   };
 
   const filterNewsList = useMemo(

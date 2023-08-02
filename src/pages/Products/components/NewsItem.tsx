@@ -32,7 +32,7 @@ const ProductItem = memo((props: ProductItemProps) => {
   // };
 
   // const handleDelete = async () => {
-  //   await dispatch(newsActions.delete(props.news._id as string));
+  //   dispatch(newsActions.delete(props.news._id as string));
   // };
 
   return <Box>product</Box>;

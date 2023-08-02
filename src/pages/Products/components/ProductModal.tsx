@@ -13,7 +13,6 @@ import NewsEditor from "./NewsEditor";
 import { memo, useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setNewsModal } from "../../../redux/slices/modalSlice";
 import { CategoryType } from "../../../types/categoryType";
 import { TagType } from "../../../types/tagType";
 import SelectTagsNews from "./SelectTagsNews";
@@ -23,6 +22,7 @@ import { NotificationToast } from "../../../utils/handlers/NotificationToast";
 import { RootState } from "../../../redux/store";
 import { InitialProduct, ProductType } from "../../../types/productType";
 import AddIcon from "@mui/icons-material/Add";
+import { setProductModal } from "../../../redux/slices/productSlice";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -67,16 +67,14 @@ const ProductModal = memo(() => {
   const [tags, setTags] = useState<TagType[]>(data ? data.tags : []);
   const [tagsSelected, setTagsSelected] = useState<string[]>([]);
   const [images, setImages] = useState<string[]>(
-    data?.images.length > 0
-      ? data.images
-      : [
-          "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-          "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-          "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-          "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-          "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-          "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-        ]
+    data?.images ?? [
+      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+    ]
   );
 
   // get data select
@@ -103,7 +101,7 @@ const ProductModal = memo(() => {
     setTags([]);
     setCategory("");
     setTagsSelected([]);
-    dispatch(setNewsModal({ open: false }));
+    dispatch(setProductModal({ open: false }));
   };
 
   // handle category change
@@ -134,7 +132,7 @@ const ProductModal = memo(() => {
 
     setErrText(initialError);
 
-    // await dispatch(
+    // dispatch(
     //   data ? newsActions.update(newsData) : newsActions.create(newsData)
     // )
     //   .unwrap()
@@ -258,7 +256,7 @@ const ProductModal = memo(() => {
                 tagSelected={
                   !tagsSelected.length
                     ? data
-                      ? data.tags.map((tag) => tag.name)
+                      ? data.tags.map((tag: TagType) => tag.name)
                       : []
                     : tagsSelected
                 }

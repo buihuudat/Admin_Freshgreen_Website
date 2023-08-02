@@ -11,7 +11,6 @@ import NewsEditor from "./NewsEditor";
 import { memo, useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setNewsModal } from "../../../redux/slices/modalSlice";
 import { CategoryType } from "../../../types/categoryType";
 import { TagType } from "../../../types/tagType";
 import SelectTagsNews from "./SelectTagsNews";
@@ -21,6 +20,7 @@ import { NotificationToast } from "../../../utils/handlers/NotificationToast";
 import { RootState } from "../../../redux/store";
 import { newsActions } from "../../../actions/newsActions";
 import { NewsType } from "../../../types/newsType";
+import { setNewsModel } from "../../../redux/slices/newsSlice";
 
 const style = {
   position: "absolute" as "absolute",
@@ -51,7 +51,7 @@ const initialError = {
 };
 
 const NewsModel = memo(() => {
-  const { open, data } = useAppSelector((state) => state.modal.news);
+  const { open, data } = useAppSelector((state: RootState) => state.news.modal);
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state: RootState) => state.news.isLoading);
   const userId = useAppSelector((state: RootState) => state.user.user?._id);
@@ -92,7 +92,7 @@ const NewsModel = memo(() => {
     setTags([]);
     setCategory("");
     setTagsSelected([]);
-    dispatch(setNewsModal({ open: false }));
+    dispatch(setNewsModel({ open: false }));
   };
 
   // handle category change
@@ -140,12 +140,10 @@ const NewsModel = memo(() => {
 
     setErrText(initialError);
 
-    await dispatch(
-      data ? newsActions.update(newsData) : newsActions.create(newsData)
-    )
+    dispatch(data ? newsActions.update(newsData) : newsActions.create(newsData))
       .unwrap()
       .then(() => {
-        dispatch(setNewsModal({ open: false }));
+        dispatch(setNewsModel({ open: false }));
       })
       .catch((err: any) => {
         err.errors &&
@@ -220,7 +218,7 @@ const NewsModel = memo(() => {
                 tagSelected={
                   !tagsSelected.length
                     ? data
-                      ? data.tags.map((tag) => tag.name)
+                      ? data.tags.map((tag: TagType) => tag.name)
                       : []
                     : tagsSelected
                 }

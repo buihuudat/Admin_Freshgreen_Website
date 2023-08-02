@@ -13,10 +13,10 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { UserType } from "../../../types/userType";
 import { useAppDispatch } from "../../../redux/hooks";
 import moment from "moment";
+import { setNewsModel } from "../../../redux/slices/newsSlice";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../../utils/api/userApi";
 import { newsActions } from "../../../actions/newsActions";
-import { setNewsModal } from "../../../redux/slices/modalSlice";
 
 interface NewsItemProps {
   news: NewsType;
@@ -43,11 +43,11 @@ const NewsItem = memo((props: NewsItemProps) => {
   }, [fetchAuthorData]);
 
   const handleView = () => {
-    dispatch(setNewsModal({ open: true, data: props.news }));
+    dispatch(setNewsModel({ open: true, data: props.news }));
   };
 
   const handleDelete = async () => {
-    await dispatch(newsActions.delete(props.news._id as string));
+    dispatch(newsActions.delete(props.news._id as string));
   };
 
   return (

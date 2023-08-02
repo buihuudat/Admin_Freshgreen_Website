@@ -161,7 +161,7 @@ const Vouchers = () => {
   };
 
   const handleDelete = async (voucher: VoucherType) => {
-    await dispatch(voucherActions.delete(voucher));
+    dispatch(voucherActions.delete(voucher));
   };
   return (
     <Box display={"flex"} gap={10} justifyContent={"center"}>

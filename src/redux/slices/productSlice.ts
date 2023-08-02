@@ -8,7 +8,7 @@ interface InitialStateProps {
   product: ProductType;
   loading: boolean;
   modal: {
-    data: ProductType;
+    data?: ProductType;
     open: boolean;
   };
 }
@@ -18,7 +18,7 @@ const initialState: InitialStateProps = {
   product: InitialProduct,
   loading: false,
   modal: {
-    data: InitialProduct,
+    data: undefined,
     open: false,
   },
 };

@@ -36,7 +36,7 @@ const Login = () => {
     setUsernameErrText("");
     setPasswordErrorText("");
 
-    await dispatch(authAction.login({ data, dispatch }))
+    dispatch(authAction.login({ data, dispatch }))
       .unwrap()
       .then(() => {
         navigate("/");

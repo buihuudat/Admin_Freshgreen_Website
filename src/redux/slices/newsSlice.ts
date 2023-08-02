@@ -2,22 +2,33 @@ import { createSlice } from "@reduxjs/toolkit";
 import { NewsType } from "../../types/newsType";
 import { newsActions } from "../../actions/newsActions";
 import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
-import { produce } from "immer";
 
 interface InitialProps {
   newsList: NewsType[];
   isLoading: boolean;
+  modal: {
+    open: boolean;
+    data?: NewsType;
+  };
 }
 
 const initialState: InitialProps = {
   newsList: [],
   isLoading: false,
+  modal: {
+    open: false,
+    data: undefined,
+  },
 };
 
 export const newsSlice = createSlice({
   name: "news",
   initialState,
-  reducers: {},
+  reducers: {
+    setNewsModel: (state, action) => {
+      state.modal = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(newsActions.gets.fulfilled, (state, action) => {
@@ -58,4 +69,5 @@ export const newsSlice = createSlice({
   },
 });
 
+export const { setNewsModel } = newsSlice.actions;
 export default newsSlice.reducer;
