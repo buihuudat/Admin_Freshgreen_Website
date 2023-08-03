@@ -4,12 +4,13 @@ import { Box, IconButton } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import { UserActionsProps, userActions } from "../../../actions/userActions";
+import { userActions } from "../../../actions/userActions";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { deleteUser } from "../../../redux/slices/userSlice";
+import { UserType } from "../../../types/userType";
 
 interface ActionButtonProps {
-  rowData: UserActionsProps;
+  rowData: UserType;
   isDeleteLoading: boolean;
   setIsDeleteLoading: (isDeleteLoading: boolean) => void;
 }
@@ -23,7 +24,7 @@ export const ActionButton = (props: ActionButtonProps) => {
   const handleDelete = async () => {
     try {
       props.setIsDeleteLoading(true);
-      await userActions.delete({ _id: props.rowData._id });
+      props.rowData._id && (await userActions.delete(props.rowData._id));
       dispatch(deleteUser({ _id: props.rowData._id }));
     } catch (error) {
     } finally {

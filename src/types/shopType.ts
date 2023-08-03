@@ -1,20 +1,35 @@
 export interface ShopType {
+  _id?: string;
+  user: string;
   name: string;
-  username: string;
-  image: string;
+  image?: string;
   description: string;
-  phone: string;
-  email: string;
-  address: string;
   bio: string;
   startYear: number;
-  products: Array<string>;
-  star: {
+  products?: Array<string>;
+  star?: {
     count: number;
   };
-  ratings: Array<{
+  ratings?: Array<{
     stars: number;
     count: number;
   }>;
-  followers: Array<string>;
+  followers?: Array<string>;
+  createdAt?: string;
+  updatedAt?: string;
 }
+
+export const InitialShop = {
+  name: "",
+  image: "",
+  user: "",
+  description: "",
+  bio: "",
+  startYear: 1978,
+  products: [],
+  star: {
+    count: 0,
+  },
+  ratings: [],
+  followers: [],
+};

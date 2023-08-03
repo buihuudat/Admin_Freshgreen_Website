@@ -6,12 +6,13 @@ import {
   LinearProgress,
   Typography,
 } from "@mui/material";
-import { userActions, UserActionsProps } from "../../actions/userActions";
+import { userActions } from "../../actions/userActions";
 import Search from "../../components/common/Search";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { ActionButton } from "./components/ActionButton";
 import moment from "moment";
+import { UserType } from "../../types/userType";
 
 export default function Users() {
   const columns: GridColDef[] = [
@@ -37,15 +38,13 @@ export default function Users() {
     },
   ];
   const dispatch = useAppDispatch();
-  const [users, setUsers] = React.useState<UserActionsProps[]>([]);
+  const [users, setUsers] = React.useState<UserType[]>([]);
   const [usersCreatedAccToDay, setUsersCreatedAccToDay] = React.useState<
-    UserActionsProps[]
+    UserType[]
   >([]);
   const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const [dataReSearch, setDataReSearch] = React.useState<UserActionsProps[]>(
-    []
-  );
+  const [dataReSearch, setDataReSearch] = React.useState<UserType[]>([]);
   const [isPending, startTransition] = React.useTransition();
   const isLoading = useAppSelector((state: RootState) => state.user.isLoading);
 
@@ -54,7 +53,7 @@ export default function Users() {
     const getUsers = async () => {
       const result = await dispatch(userActions.getUsers()).unwrap();
 
-      const customUser = result.map((user: UserActionsProps) => ({
+      const customUser = result.map((user: UserType) => ({
         ...user,
         firstname: user.fullname?.firstname,
         lastname: user.fullname?.lastname,
@@ -63,7 +62,7 @@ export default function Users() {
       const today = moment().startOf("day");
 
       // filter users created acction today
-      const usersCreatedToday = customUser.filter((user: UserActionsProps) => {
+      const usersCreatedToday = customUser.filter((user: UserType) => {
         const createdAt = moment(user.createdAt);
         return createdAt.isSame(today, "day");
       });

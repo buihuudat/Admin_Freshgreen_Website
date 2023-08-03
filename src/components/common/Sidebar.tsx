@@ -22,7 +22,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import CategoryIcon from "@mui/icons-material/Category";
 import TagIcon from "@mui/icons-material/Tag";
 import { mainColor } from "../../resources/color";
-import { Avatar, Button, Card, Paper, Typography } from "@mui/material";
+import { Avatar, Button, Card, Typography } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { authAction } from "../../actions/authActions";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";

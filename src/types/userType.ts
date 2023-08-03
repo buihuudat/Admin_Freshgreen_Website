@@ -7,11 +7,11 @@ interface UserAddress {
 }
 
 export enum UserRole {
-  user,
-  staff,
-  producer,
-  admin,
-  superadmin,
+  user = "user",
+  staff = "staff",
+  producer = "producer",
+  admin = "admin",
+  superadmin = "superadmin",
 }
 
 interface FullnameOfUser {
@@ -26,10 +26,12 @@ export interface UserType {
   phone: string;
   username: string;
   password?: string;
-  avatar: string;
+  avatar?: string;
   address: UserAddress;
   role: UserRole;
-  following: Array<string>;
+  following?: Array<string>;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const InitialUser: UserType = {

@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { UserDataType } from "../../types/dataType";
 import { userActions } from "../../actions/userActions";
 import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
 import { InitialUser, UserType } from "../../types/userType";
@@ -10,6 +9,7 @@ export interface UserStateProps {
   isLoading: boolean;
   error: boolean;
   errMsg: string;
+  userViewData: UserType;
 }
 
 const initialState: UserStateProps = {
@@ -18,6 +18,7 @@ const initialState: UserStateProps = {
   isLoading: false,
   error: false,
   errMsg: "",
+  userViewData: InitialUser,
 };
 
 export const userSlice = createSlice({
@@ -41,6 +42,9 @@ export const userSlice = createSlice({
     ) => {
       state.users.filter((user) => !(user._id === action.payload._id));
     },
+    setViewUserData: (state, action: PayloadAction<UserType>) => {
+      state.userViewData = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -51,7 +55,8 @@ export const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(userActions.userUpdate.fulfilled, (state, action) => {
-        state.user = action.payload;
+        if (state.user._id === action.payload._id) state.user = action.payload;
+        state.userViewData = action.payload;
       })
       .addMatcher<PendingAction>(
         (action) => action.type.endsWith("/pending"),
@@ -70,6 +75,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUserReducer, userChangeAvatar, deleteUser } =
+export const { setUserReducer, userChangeAvatar, deleteUser, setViewUserData } =
   userSlice.actions;
 export default userSlice.reducer;

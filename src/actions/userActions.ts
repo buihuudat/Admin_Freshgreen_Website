@@ -1,32 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { userApi } from "../utils/api/userApi";
 import { NotificationToast } from "../utils/handlers/NotificationToast";
+import { UserType } from "../types/userType";
 
 export interface changeAvatarProps {
   _id: string | undefined;
   image: string;
-}
-
-export interface UserActionsProps {
-  _id?: string | null;
-  username?: FormDataEntryValue | null | string;
-  phone?: FormDataEntryValue | null | string;
-  email?: FormDataEntryValue | null | string;
-  fullname?: {
-    firstname?: FormDataEntryValue | null | string;
-    lastname?: FormDataEntryValue | null | string;
-  };
-  password?: FormDataEntryValue | null | string;
-  address?: {
-    city?: FormDataEntryValue | null | string;
-    district?: FormDataEntryValue | null | string;
-    ward?: FormDataEntryValue | null | string;
-    street?: FormDataEntryValue | null | string;
-    more?: FormDataEntryValue | null | string;
-  };
-  role?: string | null;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export const userActions = {
@@ -42,7 +21,7 @@ export const userActions = {
   },
   userUpdate: createAsyncThunk(
     "user/update",
-    async (data: UserActionsProps, thunkAPI) => {
+    async (data: UserType, thunkAPI) => {
       try {
         const res = await userApi.updateUser(data);
         NotificationToast({ message: "Cập nhật thành công", type: "success" });
@@ -55,7 +34,7 @@ export const userActions = {
     }
   ),
 
-  delete: async (data: UserActionsProps) => {
+  delete: async (data: string) => {
     try {
       await userApi.deleteUser(data);
       NotificationToast({

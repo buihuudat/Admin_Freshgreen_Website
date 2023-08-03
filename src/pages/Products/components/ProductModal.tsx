@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import SelectCategoryNews from "./SelectCategoryNews";
 import NewsEditor from "./NewsEditor";
-import { memo, useEffect, useState } from "react";
+import { ChangeEvent, memo, useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { CategoryType } from "../../../types/categoryType";
@@ -23,6 +23,7 @@ import { RootState } from "../../../redux/store";
 import { InitialProduct, ProductType } from "../../../types/productType";
 import AddIcon from "@mui/icons-material/Add";
 import { setProductModal } from "../../../redux/slices/productSlice";
+import { getBaseImage } from "../../../utils/handlers/getBaseImage";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -37,6 +38,7 @@ const style = {
   height: 900,
   display: "flex",
   flexDirection: "column",
+  overflowY: "auto",
 };
 
 export interface DataSelect {
@@ -66,16 +68,7 @@ const ProductModal = memo(() => {
   const [category, setCategory] = useState<string>(data?.category ?? "");
   const [tags, setTags] = useState<TagType[]>(data ? data.tags : []);
   const [tagsSelected, setTagsSelected] = useState<string[]>([]);
-  const [images, setImages] = useState<string[]>(
-    data?.images ?? [
-      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      "https://plus.unsplash.com/premium_photo-1674228288323-3bfbae70ad45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxN3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    ]
-  );
+  const [images, setImages] = useState<string[]>(data?.images ?? []);
 
   // get data select
   useEffect(() => {
@@ -116,7 +109,19 @@ const ProductModal = memo(() => {
   };
 
   // handle add images
-  const handleAddImages = () => {};
+  const handleAddImages = async (e: ChangeEvent<HTMLInputElement>) => {
+    const images = await getBaseImage(e);
+    if (images && images.length > 6) {
+      NotificationToast({
+        message: "The maximun number of images allowed is 6",
+        type: "warning",
+      });
+      return;
+    }
+    images?.map(({ data }: { data: any }) => {
+      setImages((prev) => [...prev, data]);
+    });
+  };
 
   // handle remove images
   const handleRemoveImage = (index: number) => {
@@ -170,13 +175,7 @@ const ProductModal = memo(() => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography
-          component={Input}
-          align="center"
-          fontWeight={600}
-          fontSize={32}
-          m={2}
-        >
+        <Typography align="center" fontWeight={600} fontSize={32} m={2}>
           {data ? "Update" : "Create"} product
         </Typography>
 
@@ -190,16 +189,19 @@ const ProductModal = memo(() => {
               overflowX: "auto ",
             }}
           >
-            <input
-              accept="image/*"
-              id="contained-button-file"
-              hidden
-              type="file"
-              onChange={handleAddImages}
-              multiple={false}
-            />
             {!images.length ? (
-              <label htmlFor="contained-button-file">
+              <label
+                htmlFor="contained-button-file"
+                style={{ cursor: "pointer" }}
+              >
+                <input
+                  accept="image/*"
+                  id="contained-button-file"
+                  hidden
+                  type="file"
+                  onChange={handleAddImages}
+                  multiple={true}
+                />
                 <Box display={"flex"} color={"green"} flexDirection={"row"}>
                   <Typography align="center" fontWeight={600}>
                     Add images
@@ -229,6 +231,59 @@ const ProductModal = memo(() => {
             error={errText.title !== ""}
             helperText={errText.title}
           />
+          <TextField
+            fullWidth
+            multiline={true}
+            label="Description"
+            name="description"
+            defaultValue={data?.description ?? product.description}
+            required
+            error={errText.title !== ""}
+            helperText={errText.title}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 5,
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
+          >
+            <TextField
+              label="Price"
+              name="price"
+              defaultValue={data?.price ?? product.price}
+              required
+              error={errText.title !== ""}
+              helperText={errText.title}
+              type="number"
+            />
+            <TextField
+              label="Discount %"
+              name="discount"
+              type="number"
+              defaultValue={data?.discount ?? product.discount}
+              error={errText.title !== ""}
+              helperText={errText.title}
+            />
+            <TextField
+              label="Brand"
+              name="brand"
+              defaultValue={data?.description ?? product.description}
+              required
+              error={errText.title !== ""}
+              helperText={errText.title}
+            />
+            <TextField
+              label="Quantity"
+              name="quantity"
+              defaultValue={data?.quantity ?? product.quantity}
+              required
+              error={errText.title !== ""}
+              helperText={errText.title}
+            />
+          </Box>
           <Box
             sx={{
               display: "flex",

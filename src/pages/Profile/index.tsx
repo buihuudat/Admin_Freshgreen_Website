@@ -6,13 +6,13 @@ import { LoadingButton } from "@mui/lab";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getBaseImage } from "../../utils/handlers/getBaseImage";
 import { imageUpload } from "../../utils/handlers/imageUploadClound";
-import { UserActionsProps, userActions } from "../../actions/userActions";
+import { userActions } from "../../actions/userActions";
 import { useLocation } from "react-router-dom";
 import SelectRole from "./components/SelectRole";
 import { AddressForm, AddressProps } from "./components/AddressForm";
 import { RootState } from "../../redux/store";
 import { userChangeAvatar } from "../../redux/slices/userSlice";
-import { UserRole } from "../../types/userType";
+import { UserRole, UserType } from "../../types/userType";
 
 const initialErrText: {
   phone: string;
@@ -119,19 +119,20 @@ const Profile = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    const data: UserActionsProps = {
+    const data: UserType = {
       _id: user?._id,
       username: formData.get("username") || user?.username,
       phone: formData.get("phone") || user?.phone,
       email: formData.get("email") || user?.email,
-      password: formData.get("password"),
+      password: formData.get("password") as string,
       fullname: {
         firstname: formData.get("firstname") || user?.fullname?.firstname,
         lastname: formData.get("lastname") || user?.fullname?.lastname,
       },
       address,
-      role,
+      role: role as UserRole,
     };
+
     let err: boolean = false;
 
     if (data.password !== formData.get("confirmPassword")) {
@@ -151,8 +152,6 @@ const Profile = () => {
         setIsDisable(false);
       })
       .catch((err) => {
-        console.log(err);
-
         err?.errors &&
           err?.errors?.forEach((e: any) => {
             switch (e.path) {

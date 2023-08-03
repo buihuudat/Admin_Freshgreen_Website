@@ -15,8 +15,8 @@ import { useAppDispatch } from "../../../redux/hooks";
 import moment from "moment";
 import { setNewsModel } from "../../../redux/slices/newsSlice";
 import { useNavigate } from "react-router-dom";
-import { userApi } from "../../../utils/api/userApi";
 import { newsActions } from "../../../actions/newsActions";
+import { userApi } from "../../../utils/api/userApi";
 
 interface NewsItemProps {
   news: NewsType;

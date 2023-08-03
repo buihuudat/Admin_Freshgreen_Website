@@ -6,6 +6,7 @@ import tagSlice from "./slices/tagSlice";
 import newsSlice from "./slices/newsSlice";
 import voucherSlice from "./slices/voucherSlice";
 import productSlice from "./slices/productSlice";
+import shopSlice from "./slices/shopSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     news: newsSlice,
     voucher: voucherSlice,
     product: productSlice,
+    shop: shopSlice,
   },
 });
 
