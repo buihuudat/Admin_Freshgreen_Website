@@ -36,7 +36,7 @@ export const shopActions = {
       } catch (error: any) {
         if (error.data) {
           NotificationToast({ message: error.data, type: "error" });
-          thunkAPI.fulfillWithValue(error.data);
+          return thunkAPI.rejectWithValue(error.data);
         }
         throw error;
       }
@@ -55,7 +55,7 @@ export const shopActions = {
       } catch (error: any) {
         if (error.data) {
           NotificationToast({ message: error.data, type: "error" });
-          thunkAPI.fulfillWithValue(error.data);
+          return thunkAPI.rejectWithValue(error.data);
         }
         throw error;
       }

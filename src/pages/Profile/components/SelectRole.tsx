@@ -20,10 +20,10 @@ const roleData: roleDataType[] = [
     role: "staff",
     value: "Nhân viên",
   },
-  {
-    role: "producer",
-    value: "Chủ cửa hàng",
-  },
+  // {
+  //   role: "producer",
+  //   value: "Chủ cửa hàng",
+  // },
   {
     role: "admin",
     value: "Quản trị viên",

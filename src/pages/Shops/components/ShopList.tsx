@@ -1,16 +1,16 @@
 import { Box, LinearProgress, Typography } from "@mui/material";
-import NewsItem from "./NewsItem";
+import NewsItem from "./ShopItem";
 import { useAppSelector } from "../../../redux/hooks";
 import { RootState } from "../../../redux/store";
 import { memo } from "react";
-import { ProductType } from "../../../types/productType";
+import { ShopType } from "../../../types/shopType";
 
-const ShopList = memo(({ products }: { products: ProductType[] }) => {
-  const loading = useAppSelector((state: RootState) => state.news.isLoading);
+const ShopList = memo(({ shops }: { shops: ShopType[] }) => {
+  const loading = useAppSelector((state: RootState) => state.shop.loading);
 
   return loading ? (
     <LinearProgress />
-  ) : !products.length ? (
+  ) : !shops.length ? (
     <Typography fontSize={23} fontWeight={600} align="center">
       There are no shop yet!
     </Typography>
@@ -24,8 +24,8 @@ const ShopList = memo(({ products }: { products: ProductType[] }) => {
         px: 3,
       }}
     >
-      {products.map((product: ProductType) => (
-        <NewsItem key={product._id} product={product} />
+      {shops.map((shop: ShopType) => (
+        <NewsItem key={shop._id} shop={shop} />
       ))}
     </Box>
   );

@@ -1,7 +1,7 @@
 import { Avatar, Box, IconButton, TextField, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { getProvince } from "../../utils/api/getAddress";
+import { getProvince } from "../../utils/api/getProvince";
 import { LoadingButton } from "@mui/lab";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getBaseImage } from "../../utils/handlers/getBaseImage";

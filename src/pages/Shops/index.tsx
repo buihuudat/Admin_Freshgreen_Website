@@ -3,20 +3,20 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useEffect, useMemo, useState } from "react";
 import Search from "../../components/common/Search";
-import { productActions } from "../../actions/productActions";
 import { RootState } from "../../redux/store";
-import ProductList from "./components/ShopList";
-import ProductModal from "./components/ShopModal";
 import { setShopModal } from "../../redux/slices/shopSlice";
+import { shopActions } from "../../actions/shopActions";
+import ShopList from "./components/ShopList";
+import ShopModal from "./components/ShopModal";
 
 const Shops = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const products = useAppSelector((state: RootState) => state.product.products);
+  const shops = useAppSelector((state: RootState) => state.shop.shops);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(productActions.gets());
+    dispatch(shopActions.gets());
   }, [dispatch]);
 
   const handleOpenModel = () => {
@@ -25,10 +25,10 @@ const Shops = () => {
 
   const filterProductsList = useMemo(
     () =>
-      products.filter((product) =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+      shops.filter((shop) =>
+        shop.name.toLowerCase().includes(searchQuery.toLowerCase())
       ),
-    [products, searchQuery]
+    [shops, searchQuery]
   );
 
   return (
@@ -38,8 +38,8 @@ const Shops = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      <ProductModal />
-      <ProductList products={filterProductsList} />
+      <ShopModal />
+      <ShopList shops={filterProductsList} />
       <SpeedDial
         ariaLabel="Create an shop"
         sx={{

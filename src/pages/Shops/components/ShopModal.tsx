@@ -2,13 +2,12 @@ import {
   Avatar,
   Box,
   Button,
-  CircularProgress,
   IconButton,
   Modal,
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, memo, useEffect, useState } from "react";
+import { ChangeEvent, memo, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { CategoryType } from "../../../types/categoryType";
@@ -19,7 +18,7 @@ import { setShopModal } from "../../../redux/slices/shopSlice";
 import { getBaseImage } from "../../../utils/handlers/getBaseImage";
 import { imageUpload } from "../../../utils/handlers/imageUploadClound";
 import { shopActions } from "../../../actions/shopActions";
-import { error } from "console";
+import SelectUser from "./SelectUser";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -45,7 +44,7 @@ export interface DataSelect {
 const initialError = {
   name: "",
   bio: "",
-  desccription: "",
+  description: "",
   startYear: "",
 };
 
@@ -58,6 +57,7 @@ const ShopModal = memo(() => {
   const [shop, setShop] = useState<ShopType>(data ?? InitialShop);
   const [errText, setErrText] = useState(initialError);
   const [image, setImage] = useState<string>();
+  const [userSelected, setUserSelected] = useState<string>("");
 
   // handle close modal
   const handleClose = () => {
@@ -79,8 +79,8 @@ const ShopModal = memo(() => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const newShop: ShopType = {
-      user: userId as string,
-      image: await imageUpload(image),
+      user: userSelected,
+      image: image ? await imageUpload(image) : "",
       name: formData.get("name") as string,
       bio: formData.get("bio") as string,
       description: formData.get("description") as string,
@@ -92,13 +92,6 @@ const ShopModal = memo(() => {
       setErrText((prev) => ({
         ...prev,
         name: "Shop Name must be leat at 3 characters long",
-      }));
-      err = true;
-    }
-    if (newShop.name.trim().length < 3) {
-      setErrText((prev) => ({
-        ...prev,
-        name: "Shop Name must be leat 3 characters long",
       }));
       err = true;
     }
@@ -130,26 +123,32 @@ const ShopModal = memo(() => {
     if (err) return;
     setErrText(initialError);
 
-    dispatch(shopActions.create(newShop))
-      .unwrap()
-      .then(() => {
-        dispatch(setShopModal({ open: false }));
-      })
-      .catch((err: any) => {
-        err?.errors.forEach((e: any) => {
-          switch (e.path) {
-            case "name":
-              setErrText((prev) => ({
-                ...prev,
-                name: e.msg,
-              }));
-              break;
-
-            default:
-              break;
-          }
-        });
-      });
+    !data
+      ? dispatch(shopActions.create(newShop))
+          .unwrap()
+          .then(() => {
+            dispatch(setShopModal({ open: false }));
+          })
+          .catch((err: any) => {
+            err?.errors?.length &&
+              err?.errors.forEach((e: any) => {
+                switch (e.path) {
+                  case "name":
+                    setErrText((prev) => ({
+                      ...prev,
+                      name: e.msg,
+                    }));
+                    break;
+                  default:
+                    break;
+                }
+              });
+          })
+      : dispatch(shopActions.update(newShop))
+          .unwrap()
+          .then(() => {
+            dispatch(setShopModal({ open: false }));
+          });
   };
 
   return (
@@ -186,6 +185,11 @@ const ShopModal = memo(() => {
           </label>
         </IconButton>
 
+        <SelectUser
+          userSelected={userSelected}
+          setUserSelected={setUserSelected}
+        />
+
         <TextField
           label="Shop Name"
           required
@@ -210,8 +214,8 @@ const ShopModal = memo(() => {
           fullWidth
           required
           margin="normal"
-          error={errText.desccription !== ""}
-          helperText={errText.desccription}
+          error={errText.description !== ""}
+          helperText={errText.description}
         />
         <TextField
           label="Start Year"
