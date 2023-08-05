@@ -25,9 +25,11 @@ const Products = () => {
 
   const filterProductsList = useMemo(
     () =>
-      products.filter((product) =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
+      products.length
+        ? products.filter((product) =>
+            product?.title?.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        : [],
     [products, searchQuery]
   );
 

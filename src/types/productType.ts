@@ -12,20 +12,20 @@ export interface ProductType {
   title: string;
   description: string;
   price: number;
-  lastPrice: number;
+  lastPrice?: number;
   discount: number;
-  star: {
+  star?: {
     count: number;
   };
-  ratings: Array<RatingsType>;
+  ratings?: Array<RatingsType>;
   category: string;
   tags: Array<TagType>;
-  status: boolean;
+  status?: boolean;
   quantity: number;
-  currentQuantity: number;
+  currentQuantity?: number;
   brand: string;
   shop: string;
-  comments: Array<string>;
+  comments?: Array<string>;
   createdAt?: string;
   updatedAt?: string;
 }

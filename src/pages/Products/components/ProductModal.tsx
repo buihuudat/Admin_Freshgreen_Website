@@ -24,6 +24,9 @@ import { InitialProduct, ProductType } from "../../../types/productType";
 import AddIcon from "@mui/icons-material/Add";
 import { setProductModal } from "../../../redux/slices/productSlice";
 import { getBaseImage } from "../../../utils/handlers/getBaseImage";
+import SelectUser from "../../Shops/components/SelectUser";
+import { productActions } from "../../../actions/productActions";
+import { imageUpload } from "../../../utils/handlers/imageUploadClound";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -35,7 +38,7 @@ const style = {
   borderRadius: 2,
   p: 4,
   width: "80%",
-  height: 900,
+  height: 600,
   display: "flex",
   flexDirection: "column",
   overflowY: "auto",
@@ -49,15 +52,20 @@ export interface DataSelect {
 const initialError = {
   title: "",
   category: "",
+  description: "",
   tag: "",
-  content: "",
+  discount: "",
+  price: "",
+  brand: "",
+  quantity: "",
 };
 
 const ProductModal = memo(() => {
-  const { open, data } = useAppSelector((state) => state.product.modal);
+  const { open, data } = useAppSelector(
+    (state: RootState) => state.product.modal
+  );
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state: RootState) => state.news.isLoading);
-  const userId = useAppSelector((state: RootState) => state.user.user?._id);
 
   const [product, setProduct] = useState<ProductType>(data ?? InitialProduct);
   const [errText, setErrText] = useState(initialError);
@@ -69,6 +77,7 @@ const ProductModal = memo(() => {
   const [tags, setTags] = useState<TagType[]>(data ? data.tags : []);
   const [tagsSelected, setTagsSelected] = useState<string[]>([]);
   const [images, setImages] = useState<string[]>(data?.images ?? []);
+  const [userSelected, setUserSelected] = useState<string>("");
 
   // get data select
   useEffect(() => {
@@ -80,7 +89,7 @@ const ProductModal = memo(() => {
       if (categories && tags) {
         setDataSelect({
           categories,
-          tags: tags,
+          tags,
         });
       }
     };
@@ -92,6 +101,8 @@ const ProductModal = memo(() => {
     setErrText(initialError);
     setProduct(InitialProduct);
     setTags([]);
+    setImages([]);
+    setUserSelected("");
     setCategory("");
     setTagsSelected([]);
     dispatch(setProductModal({ open: false }));
@@ -130,41 +141,120 @@ const ProductModal = memo(() => {
     setImages(newImages);
   };
 
-  const handlePostNews = async () => {
-    const newProduct: ProductType = product;
+  const handleProduct = async (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    console.log(newProduct);
+    const formData = new FormData(e.target);
+
+    const newProduct: ProductType = {
+      images: await Promise.all(images.map((image) => imageUpload(image))),
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      price: Number(formData.get("price")),
+      discount: Number(formData.get("descount")),
+      brand: formData.get("brand") as string,
+      quantity: Number(formData.get("quantity")),
+      category: category === "" ? dataSelect.categories[0].name : category,
+      tags,
+      shop: userSelected,
+    };
+
+    let err = false;
+
+    if (!newProduct.images.length) {
+      NotificationToast({
+        message: "You haven't selected a photo yet",
+        type: "error",
+      });
+      return;
+    }
+
+    if (newProduct.title.length < 10 || newProduct.title.length > 50) {
+      setErrText((prev) => ({
+        ...prev,
+        title: "Title must be between 10 and 50 characters long.",
+      }));
+      err = true;
+    }
+
+    if (newProduct.brand.length < 3 || newProduct.brand.length > 50) {
+      setErrText((prev) => ({
+        ...prev,
+        brand: "Brand must be between 3 and 50 characters long.",
+      }));
+      err = true;
+    }
+
+    if (newProduct.description.length < 100) {
+      setErrText((prev) => ({
+        ...prev,
+        description: "Desciption must be at 100 characters.",
+      }));
+      err = true;
+    }
+
+    if (newProduct.price < 0) {
+      setErrText((prev) => ({
+        ...prev,
+        price: "Invalid price.",
+      }));
+      err = true;
+    }
+
+    if (newProduct.discount < 0 || newProduct.discount > 100) {
+      setErrText((prev) => ({
+        ...prev,
+        disccoun: "Invalid price.",
+      }));
+      err = true;
+    }
+
+    if (newProduct.quantity < 0) {
+      setErrText((prev) => ({
+        ...prev,
+        quantity: "Invalid quantity.",
+      }));
+      err = true;
+    }
+
+    if (!newProduct.tags.length) {
+      setErrText((prev) => ({
+        ...prev,
+        tag: "You haven't selected a tag yet.",
+      }));
+      err = true;
+    }
+
+    if (err) return;
 
     setErrText(initialError);
 
-    // dispatch(
-    //   data ? newsActions.update(newsData) : newsActions.create(newsData)
-    // )
-    //   .unwrap()
-    //   .then(() => {
-    //     dispatch(setNewsModal({ open: false }));
-    //   })
-    //   .catch((err: any) => {
-    //     err.errors &&
-    //       err.errors.forEach((e: any) => {
-    //         switch (e.path) {
-    //           case "title":
-    //             setErrText((prev) => ({
-    //               ...prev,
-    //               title: e.msg,
-    //             }));
-    //             break;
-    //           case "content":
-    //             setErrText((prev) => ({
-    //               ...prev,
-    //               content: e.msg,
-    //             }));
-    //             break;
-    //           default:
-    //             break;
-    //         }
-    //       });
-    //   });
+    await dispatch(productActions.create(newProduct))
+      .unwrap()
+      .then(() => {
+        dispatch(setProductModal({ open: false }));
+      })
+      .catch((err: any) => {
+        err?.errors &&
+          err.errors.forEach((e: any) => {
+            switch (e.path) {
+              case "title":
+                setErrText((prev) => ({
+                  ...prev,
+                  title: e.msg,
+                }));
+                break;
+              case "description":
+                setErrText((prev) => ({
+                  ...prev,
+                  description: e.msg,
+                }));
+                break;
+              default:
+                break;
+            }
+          });
+      });
   };
 
   return (
@@ -174,11 +264,12 @@ const ProductModal = memo(() => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={style} component={"form"} onSubmit={handleProduct}>
         <Typography align="center" fontWeight={600} fontSize={32} m={2}>
           {data ? "Update" : "Create"} product
         </Typography>
 
+        {/* form */}
         <Box display={"flex"} flexDirection={"column"} gap={2}>
           <Box
             sx={{
@@ -222,6 +313,12 @@ const ProductModal = memo(() => {
               ))
             )}
           </Box>
+
+          <SelectUser
+            userSelected={userSelected}
+            setUserSelected={setUserSelected}
+          />
+
           <TextField
             fullWidth
             label="Title"
@@ -238,8 +335,8 @@ const ProductModal = memo(() => {
             name="description"
             defaultValue={data?.description ?? product.description}
             required
-            error={errText.title !== ""}
-            helperText={errText.title}
+            error={errText.description !== ""}
+            helperText={errText.description}
           />
           <Box
             sx={{
@@ -255,8 +352,8 @@ const ProductModal = memo(() => {
               name="price"
               defaultValue={data?.price ?? product.price}
               required
-              error={errText.title !== ""}
-              helperText={errText.title}
+              error={errText.price !== ""}
+              helperText={errText.price}
               type="number"
             />
             <TextField
@@ -264,24 +361,25 @@ const ProductModal = memo(() => {
               name="discount"
               type="number"
               defaultValue={data?.discount ?? product.discount}
-              error={errText.title !== ""}
-              helperText={errText.title}
+              error={errText.discount !== ""}
+              helperText={errText.discount}
             />
             <TextField
               label="Brand"
               name="brand"
-              defaultValue={data?.description ?? product.description}
+              defaultValue={data?.brand ?? product.brand}
               required
-              error={errText.title !== ""}
-              helperText={errText.title}
+              error={errText.brand !== ""}
+              helperText={errText.brand}
             />
             <TextField
               label="Quantity"
               name="quantity"
+              type="number"
               defaultValue={data?.quantity ?? product.quantity}
               required
-              error={errText.title !== ""}
-              helperText={errText.title}
+              error={errText.quantity !== ""}
+              helperText={errText.quantity}
             />
           </Box>
           <Box
@@ -322,6 +420,7 @@ const ProductModal = memo(() => {
           </Box>
         </Box>
 
+        {/* form button */}
         <Box
           display={"flex"}
           flexDirection={"row"}
@@ -342,7 +441,7 @@ const ProductModal = memo(() => {
             color="success"
             fullWidth
             loading={loading}
-            onClick={handlePostNews}
+            type="submit"
           >
             {data ? "Update" : "Create"}
           </LoadingButton>
