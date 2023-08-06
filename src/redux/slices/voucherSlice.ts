@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { voucherActions } from "../../actions/voucherActions";
-import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "../../types/silceType";
 import { VoucherType, initialVoucher } from "../../types/voucherType";
 
 interface InitialStateProps {

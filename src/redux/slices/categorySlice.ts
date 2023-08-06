@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { CategoryType, initialCategory } from "../../types/categoryType";
 import { categoryActions } from "../../actions/categoryActions";
-import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "../../types/silceType";
 
 interface InitialProps {
   categories: CategoryType[];

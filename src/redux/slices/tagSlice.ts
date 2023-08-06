@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { TagType, initialTag } from "../../types/tagType";
 import { tagActions } from "../../actions/tagActions";
-import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "../../types/silceType";
 
 interface IntitialProps {
   tags: TagType[];

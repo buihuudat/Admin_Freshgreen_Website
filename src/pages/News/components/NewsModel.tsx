@@ -6,14 +6,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import SelectCategoryNews from "./SelectCategoryNews";
-import NewsEditor from "./NewsEditor";
+import SelectCategoryNews from "../../../components/SelectCategory";
 import { memo, useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { CategoryType } from "../../../types/categoryType";
 import { TagType } from "../../../types/tagType";
-import SelectTagsNews from "./SelectTagsNews";
+import SelectTagsNews from "../../../components/SelectTags";
 import { categoryActions } from "../../../actions/categoryActions";
 import { tagActions } from "../../../actions/tagActions";
 import { NotificationToast } from "../../../utils/handlers/NotificationToast";
@@ -21,6 +20,7 @@ import { RootState } from "../../../redux/store";
 import { newsActions } from "../../../actions/newsActions";
 import { NewsType } from "../../../types/newsType";
 import { setNewsModel } from "../../../redux/slices/newsSlice";
+import Editor from "../../../components/common/Editor";
 
 const style = {
   position: "absolute" as "absolute",
@@ -50,7 +50,7 @@ const initialError = {
   content: "",
 };
 
-const NewsModel = memo(() => {
+const NewsModel = () => {
   const { open, data } = useAppSelector((state: RootState) => state.news.modal);
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state: RootState) => state.news.isLoading);
@@ -227,10 +227,7 @@ const NewsModel = memo(() => {
               />
             )}
           </Box>
-          <NewsEditor
-            content={data?.content ?? content}
-            setContent={setContent}
-          />
+          <Editor content={data?.content ?? content} setContent={setContent} />
         </Box>
 
         <Box
@@ -261,6 +258,6 @@ const NewsModel = memo(() => {
       </Box>
     </Modal>
   );
-});
+};
 
 export default memo(NewsModel);

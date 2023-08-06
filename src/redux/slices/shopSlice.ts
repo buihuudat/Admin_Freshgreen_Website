@@ -1,7 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { InitialShop, ShopType } from "../../types/shopType";
 import { shopActions } from "../../actions/shopActions";
-import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "../../types/silceType";
 
 interface InitialStateProps {
   shop: ShopType;
@@ -27,7 +31,10 @@ export const shopSlice = createSlice({
   name: "shop",
   initialState,
   reducers: {
-    setShopModal: (state, action) => {
+    setShopModal: (
+      state,
+      action: PayloadAction<{ open: boolean; data?: ShopType }>
+    ) => {
       state.modal = action.payload;
     },
   },

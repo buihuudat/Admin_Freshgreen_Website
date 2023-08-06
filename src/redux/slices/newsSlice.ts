@@ -1,7 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { NewsType } from "../../types/newsType";
 import { newsActions } from "../../actions/newsActions";
-import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "../../types/silceType";
 
 interface InitialProps {
   newsList: NewsType[];
@@ -25,7 +29,10 @@ export const newsSlice = createSlice({
   name: "news",
   initialState,
   reducers: {
-    setNewsModel: (state, action) => {
+    setNewsModel: (
+      state,
+      action: PayloadAction<{ open: boolean; data?: NewsType }>
+    ) => {
       state.modal = action.payload;
     },
   },

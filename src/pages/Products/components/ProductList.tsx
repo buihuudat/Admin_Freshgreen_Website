@@ -1,12 +1,12 @@
 import { Box, LinearProgress, Typography } from "@mui/material";
-import NewsItem from "./NewsItem";
 import { useAppSelector } from "../../../redux/hooks";
 import { RootState } from "../../../redux/store";
 import { memo } from "react";
 import { ProductType } from "../../../types/productType";
+import ProductItem from "./ProductItem";
 
 const ProductList = memo(({ products }: { products: ProductType[] }) => {
-  const loading = useAppSelector((state: RootState) => state.news.isLoading);
+  const loading = useAppSelector((state: RootState) => state.product.loading);
 
   return loading ? (
     <LinearProgress />
@@ -25,7 +25,7 @@ const ProductList = memo(({ products }: { products: ProductType[] }) => {
       }}
     >
       {products.map((product: ProductType) => (
-        <NewsItem key={product._id} product={product} />
+        <ProductItem key={product._id} product={product} />
       ))}
     </Box>
   );

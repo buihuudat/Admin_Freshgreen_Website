@@ -4,7 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { CategoryType } from "../../../types/categoryType";
+import { CategoryType } from "../types/categoryType";
 
 export interface SelectCategoryProps {
   errText: string;
@@ -23,7 +23,7 @@ export default function SelectCategoryNews(props: SelectCategoryProps) {
         <Select
           labelId={id}
           id={id}
-          defaultValue={props.value !== "" ? props.value : props.data[0].name}
+          value={props.value !== "" ? props.value : props.data[0].name}
           label={"Category"}
           onChange={(e) => props.onChange(e.target.value)}
           error={props.errText !== ""}

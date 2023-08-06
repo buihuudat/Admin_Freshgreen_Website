@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { authAction } from "../../actions/authActions";
-import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "../../types/silceType";
 
 interface IntinialProps {
   isLoading: boolean;

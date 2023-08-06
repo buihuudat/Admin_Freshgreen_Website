@@ -18,7 +18,7 @@ import { setShopModal } from "../../../redux/slices/shopSlice";
 import { getBaseImage } from "../../../utils/handlers/getBaseImage";
 import { imageUpload } from "../../../utils/handlers/imageUploadClound";
 import { shopActions } from "../../../actions/shopActions";
-import SelectUser from "./SelectUser";
+import SelectUser from "../../../components/SelectUser";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -48,11 +48,10 @@ const initialError = {
   startYear: "",
 };
 
-const ShopModal = memo(() => {
+const ShopModal = () => {
   const dispatch = useAppDispatch();
   const { open, data } = useAppSelector((state: RootState) => state.shop.modal);
   const loading = useAppSelector((state: RootState) => state.shop.loading);
-  const userId = useAppSelector((state: RootState) => state.user.user?._id);
 
   const [shop, setShop] = useState<ShopType>(data ?? InitialShop);
   const [errText, setErrText] = useState(initialError);
@@ -255,6 +254,6 @@ const ShopModal = memo(() => {
       </Box>
     </Modal>
   );
-});
+};
 
 export default memo(ShopModal);

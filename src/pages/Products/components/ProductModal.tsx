@@ -2,20 +2,15 @@ import {
   Box,
   Button,
   CircularProgress,
-  IconButton,
-  Input,
   Modal,
   TextField,
   Typography,
 } from "@mui/material";
-import SelectCategoryNews from "./SelectCategoryNews";
-import NewsEditor from "./NewsEditor";
-import { ChangeEvent, memo, useEffect, useState } from "react";
+import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { CategoryType } from "../../../types/categoryType";
 import { TagType } from "../../../types/tagType";
-import SelectTagsNews from "./SelectTagsNews";
 import { categoryActions } from "../../../actions/categoryActions";
 import { tagActions } from "../../../actions/tagActions";
 import { NotificationToast } from "../../../utils/handlers/NotificationToast";
@@ -24,9 +19,12 @@ import { InitialProduct, ProductType } from "../../../types/productType";
 import AddIcon from "@mui/icons-material/Add";
 import { setProductModal } from "../../../redux/slices/productSlice";
 import { getBaseImage } from "../../../utils/handlers/getBaseImage";
-import SelectUser from "../../Shops/components/SelectUser";
 import { productActions } from "../../../actions/productActions";
 import { imageUpload } from "../../../utils/handlers/imageUploadClound";
+import ProductEditor from "../../../components/common/Editor";
+import SelectCategory from "../../../components/SelectCategory";
+import SelectTags from "../../../components/SelectTags";
+import SelectShop from "../../../components/SelectShop";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -38,7 +36,7 @@ const style = {
   borderRadius: 2,
   p: 4,
   width: "80%",
-  height: 600,
+  height: 800,
   display: "flex",
   flexDirection: "column",
   overflowY: "auto",
@@ -60,24 +58,34 @@ const initialError = {
   quantity: "",
 };
 
-const ProductModal = memo(() => {
+const ProductModal = () => {
   const { open, data } = useAppSelector(
     (state: RootState) => state.product.modal
   );
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state: RootState) => state.news.isLoading);
+  const loading = useAppSelector((state: RootState) => state.product.loading);
 
   const [product, setProduct] = useState<ProductType>(data ?? InitialProduct);
   const [errText, setErrText] = useState(initialError);
+  const [description, setDescription] = useState<string>(() =>
+    data ? data.description : ""
+  );
+  const [category, setCategory] = useState<string>(() =>
+    data ? data.category : ""
+  );
+  const [tagsSelected, setTagsSelected] = useState<string[]>([]);
+
+  const [shopSelected, setShopSelected] = useState<string>(() =>
+    data ? data.shop : ""
+  );
+  const [tags, setTags] = useState<TagType[]>(() => (data ? data.tags : []));
+
   const [dataSelect, setDataSelect] = useState<DataSelect>({
     categories: [],
     tags: [],
   });
-  const [category, setCategory] = useState<string>(data?.category ?? "");
-  const [tags, setTags] = useState<TagType[]>(data ? data.tags : []);
-  const [tagsSelected, setTagsSelected] = useState<string[]>([]);
-  const [images, setImages] = useState<string[]>(data?.images ?? []);
-  const [userSelected, setUserSelected] = useState<string>("");
+
+  console.log(product);
 
   // get data select
   useEffect(() => {
@@ -97,27 +105,27 @@ const ProductModal = memo(() => {
   }, [dispatch]);
 
   // handle close modal
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setErrText(initialError);
     setProduct(InitialProduct);
     setTags([]);
-    setImages([]);
-    setUserSelected("");
+    setShopSelected("");
     setCategory("");
+    setDescription("");
     setTagsSelected([]);
     dispatch(setProductModal({ open: false }));
-  };
+  }, [dispatch]);
 
   // handle category change
-  const handleCategorySelect = (e: string) => {
+  const handleCategorySelect = useCallback((e: string) => {
     setCategory(e);
-  };
+  }, []);
 
   // handle select tags
-  const handleTagsSelect = (e: any) => {
+  const handleTagsSelect = useCallback((e: any) => {
     setTagsSelected(e);
     setTags(e.map((name: string) => ({ name })));
-  };
+  }, []);
 
   // handle add images
   const handleAddImages = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -129,133 +137,156 @@ const ProductModal = memo(() => {
       });
       return;
     }
+
     images?.map(({ data }: { data: any }) => {
-      setImages((prev) => [...prev, data]);
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        images: [...prevProduct.images, data],
+      }));
     });
   };
 
   // handle remove images
-  const handleRemoveImage = (index: number) => {
-    const newImages = [...images];
-    newImages.splice(index, 1);
-    setImages(newImages);
-  };
+  const handleRemoveImage = useCallback(
+    (index: number) => {
+      const newImages = [...product.images];
+      newImages.splice(index, 1);
+      setProduct((prev) => ({
+        ...prev,
+        images: newImages,
+      }));
+    },
+    [product.images]
+  );
 
-  const handleProduct = async (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleProduct = useCallback(
+    async (e: ChangeEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    const formData = new FormData(e.target);
+      const formData = new FormData(e.target);
 
-    const newProduct: ProductType = {
-      images: await Promise.all(images.map((image) => imageUpload(image))),
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      price: Number(formData.get("price")),
-      discount: Number(formData.get("descount")),
-      brand: formData.get("brand") as string,
-      quantity: Number(formData.get("quantity")),
-      category: category === "" ? dataSelect.categories[0].name : category,
+      const newProduct: ProductType = {
+        images: await Promise.all(
+          product.images.map((image) => imageUpload(image))
+        ),
+        title: formData.get("title") as string,
+        description,
+        price: Number(formData.get("price")),
+        discount: Number(formData.get("discount")),
+        brand: formData.get("brand") as string,
+        quantity: Number(formData.get("quantity")),
+        category: category === "" ? dataSelect.categories[0].name : category,
+        tags,
+        shop: shopSelected,
+      };
+
+      let err = false;
+
+      if (!newProduct.images.length) {
+        NotificationToast({
+          message: "You haven't selected a photo yet",
+          type: "error",
+        });
+        return;
+      }
+
+      if (newProduct.title.length < 10 || newProduct.title.length > 50) {
+        setErrText((prev) => ({
+          ...prev,
+          title: "Title must be between 10 and 50 characters long.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.brand.length < 3 || newProduct.brand.length > 50) {
+        setErrText((prev) => ({
+          ...prev,
+          brand: "Brand must be between 3 and 50 characters long.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.description.length < 100) {
+        setErrText((prev) => ({
+          ...prev,
+          description: "Desciption must be at 100 characters.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.price < 0) {
+        setErrText((prev) => ({
+          ...prev,
+          price: "Invalid price.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.discount < 0 || newProduct.discount > 100) {
+        setErrText((prev) => ({
+          ...prev,
+          disccoun: "Invalid price.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.quantity < 0) {
+        setErrText((prev) => ({
+          ...prev,
+          quantity: "Invalid quantity.",
+        }));
+        err = true;
+      }
+
+      if (!newProduct.tags.length) {
+        setErrText((prev) => ({
+          ...prev,
+          tag: "You haven't selected a tag yet.",
+        }));
+        err = true;
+      }
+
+      if (err) return;
+
+      setErrText(initialError);
+
+      await dispatch(productActions.create(newProduct))
+        .unwrap()
+        .then(() => {
+          dispatch(setProductModal({ open: false }));
+        })
+        .catch((err: any) => {
+          err?.errors &&
+            err.errors.forEach((e: any) => {
+              switch (e.path) {
+                case "title":
+                  setErrText((prev) => ({
+                    ...prev,
+                    title: e.msg,
+                  }));
+                  break;
+                case "description":
+                  setErrText((prev) => ({
+                    ...prev,
+                    description: e.msg,
+                  }));
+                  break;
+                default:
+                  break;
+              }
+            });
+        });
+    },
+    [
+      dispatch,
+      category,
+      description,
+      product.images,
+      shopSelected,
       tags,
-      shop: userSelected,
-    };
-
-    let err = false;
-
-    if (!newProduct.images.length) {
-      NotificationToast({
-        message: "You haven't selected a photo yet",
-        type: "error",
-      });
-      return;
-    }
-
-    if (newProduct.title.length < 10 || newProduct.title.length > 50) {
-      setErrText((prev) => ({
-        ...prev,
-        title: "Title must be between 10 and 50 characters long.",
-      }));
-      err = true;
-    }
-
-    if (newProduct.brand.length < 3 || newProduct.brand.length > 50) {
-      setErrText((prev) => ({
-        ...prev,
-        brand: "Brand must be between 3 and 50 characters long.",
-      }));
-      err = true;
-    }
-
-    if (newProduct.description.length < 100) {
-      setErrText((prev) => ({
-        ...prev,
-        description: "Desciption must be at 100 characters.",
-      }));
-      err = true;
-    }
-
-    if (newProduct.price < 0) {
-      setErrText((prev) => ({
-        ...prev,
-        price: "Invalid price.",
-      }));
-      err = true;
-    }
-
-    if (newProduct.discount < 0 || newProduct.discount > 100) {
-      setErrText((prev) => ({
-        ...prev,
-        disccoun: "Invalid price.",
-      }));
-      err = true;
-    }
-
-    if (newProduct.quantity < 0) {
-      setErrText((prev) => ({
-        ...prev,
-        quantity: "Invalid quantity.",
-      }));
-      err = true;
-    }
-
-    if (!newProduct.tags.length) {
-      setErrText((prev) => ({
-        ...prev,
-        tag: "You haven't selected a tag yet.",
-      }));
-      err = true;
-    }
-
-    if (err) return;
-
-    setErrText(initialError);
-
-    await dispatch(productActions.create(newProduct))
-      .unwrap()
-      .then(() => {
-        dispatch(setProductModal({ open: false }));
-      })
-      .catch((err: any) => {
-        err?.errors &&
-          err.errors.forEach((e: any) => {
-            switch (e.path) {
-              case "title":
-                setErrText((prev) => ({
-                  ...prev,
-                  title: e.msg,
-                }));
-                break;
-              case "description":
-                setErrText((prev) => ({
-                  ...prev,
-                  description: e.msg,
-                }));
-                break;
-              default:
-                break;
-            }
-          });
-      });
-  };
+      dataSelect.categories,
+    ]
+  );
 
   return (
     <Modal
@@ -278,9 +309,20 @@ const ProductModal = memo(() => {
               gap: 5,
               justifyContent: "space-around",
               overflowX: "auto ",
+              alignItems: "center",
             }}
           >
-            {!images.length ? (
+            {product.images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                title="image"
+                alt="imageProduct"
+                onClick={() => handleRemoveImage(index)}
+                style={{ width: "auto", maxHeight: 300, objectFit: "cover" }}
+              />
+            ))}
+            {product.images.length < 6 && (
               <label
                 htmlFor="contained-button-file"
                 style={{ cursor: "pointer" }}
@@ -293,30 +335,28 @@ const ProductModal = memo(() => {
                   onChange={handleAddImages}
                   multiple={true}
                 />
-                <Box display={"flex"} color={"green"} flexDirection={"row"}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    color: "green",
+                    flexDirection: "row",
+                    width: "auto",
+                    height: 100,
+                  }}
+                >
                   <Typography align="center" fontWeight={600}>
                     Add images
                   </Typography>
                   <AddIcon />
                 </Box>
               </label>
-            ) : (
-              images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  title="image"
-                  alt="imageProduct"
-                  onClick={() => handleRemoveImage(index)}
-                  style={{ width: "auto", maxHeight: 300, objectFit: "cover" }}
-                />
-              ))
             )}
           </Box>
 
-          <SelectUser
-            userSelected={userSelected}
-            setUserSelected={setUserSelected}
+          <SelectShop
+            shopSelected={shopSelected}
+            setShopSelected={setShopSelected}
           />
 
           <TextField
@@ -328,16 +368,9 @@ const ProductModal = memo(() => {
             error={errText.title !== ""}
             helperText={errText.title}
           />
-          <TextField
-            fullWidth
-            multiline={true}
-            label="Description"
-            name="description"
-            defaultValue={data?.description ?? product.description}
-            required
-            error={errText.description !== ""}
-            helperText={errText.description}
-          />
+
+          <ProductEditor content={description} setContent={setDescription} />
+
           <Box
             sx={{
               display: "flex",
@@ -394,7 +427,7 @@ const ProductModal = memo(() => {
             {!dataSelect.categories.length ? (
               <CircularProgress />
             ) : (
-              <SelectCategoryNews
+              <SelectCategory
                 data={dataSelect.categories}
                 errText={errText.category}
                 onChange={handleCategorySelect}
@@ -404,7 +437,7 @@ const ProductModal = memo(() => {
             {!dataSelect.tags.length ? (
               <CircularProgress />
             ) : (
-              <SelectTagsNews
+              <SelectTags
                 tagsData={dataSelect.tags}
                 tagSelected={
                   !tagsSelected.length
@@ -449,6 +482,6 @@ const ProductModal = memo(() => {
       </Box>
     </Modal>
   );
-});
+};
 
 export default memo(ProductModal);

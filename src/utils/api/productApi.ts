@@ -8,6 +8,5 @@ export const productApi = {
     axiosClient.post("/product/create", newProduct),
   update: (newProduct: ProductType) =>
     axiosClient.put(`/product/${newProduct._id}`, newProduct),
-  delete: (product: ProductType) =>
-    axiosClient.patch(`/product/${product._id}`),
+  delete: (id: string) => axiosClient.patch(`/product/${id}`),
 };

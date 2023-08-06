@@ -1,7 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { InitialProduct, ProductType } from "../../types/productType";
 import { productActions } from "../../actions/productActions";
-import { FulfilledAction, PendingAction, RejectedAction } from "./silceType";
+import {
+  FulfilledAction,
+  PendingAction,
+  RejectedAction,
+} from "../../types/silceType";
 
 interface InitialStateProps {
   products: Array<ProductType>;
@@ -27,7 +31,10 @@ export const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    setProductModal: (state, action) => {
+    setProductModal: (
+      state,
+      action: PayloadAction<{ open: boolean; data?: ProductType }>
+    ) => {
       state.modal = action.payload;
     },
   },
@@ -54,7 +61,7 @@ export const productSlice = createSlice({
       })
       .addCase(productActions.delete.fulfilled, (state, action) => {
         const index = state.products.findIndex(
-          (product) => product._id === action.meta.arg._id
+          (product) => product._id === action.meta.arg
         );
         state.products.splice(index, 1);
       })

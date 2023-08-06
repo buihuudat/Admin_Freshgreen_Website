@@ -7,7 +7,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/material";
-import { TagType } from "../../../types/tagType";
+import { TagType } from "../types/tagType";
 
 export interface SelectTagsNewsProps {
   tagsData: TagType[];

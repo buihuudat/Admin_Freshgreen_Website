@@ -8,6 +8,7 @@ import { RootState } from "../../redux/store";
 import ProductList from "./components/ProductList";
 import ProductModal from "./components/ProductModal";
 import { setProductModal } from "../../redux/slices/productSlice";
+import { ProductType } from "../../types/productType";
 
 const Products = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -26,7 +27,7 @@ const Products = () => {
   const filterProductsList = useMemo(
     () =>
       products.length
-        ? products.filter((product) =>
+        ? products.filter((product: ProductType) =>
             product?.title?.toLowerCase().includes(searchQuery.toLowerCase())
           )
         : [],

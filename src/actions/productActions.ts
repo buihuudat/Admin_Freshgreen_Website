@@ -63,9 +63,9 @@ export const productActions = {
     }
   ),
 
-  delete: createAsyncThunk("product/delete", async (product: ProductType) => {
+  delete: createAsyncThunk("product/delete", async (id: string) => {
     try {
-      const res = await productApi.delete(product);
+      const res = await productApi.delete(id);
       NotificationToast({ message: res.data, type: "success" });
       return true;
     } catch (error) {

@@ -6,10 +6,10 @@ import {
   Select,
 } from "@mui/material";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { RootState } from "../../../redux/store";
-import { UserType } from "../../../types/userType";
-import { userActions } from "../../../actions/userActions";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
+import { UserType } from "../types/userType";
+import { userActions } from "../actions/userActions";
 
 interface SeletedUserProps {
   userSelected: string;

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 
@@ -6,7 +7,7 @@ interface Props {
   setContent: (content: string) => void;
 }
 
-const NewsEditor = (props: Props) => {
+const Editor = memo((props: Props) => {
   const handleChangeInput = (e: any) => {
     props.setContent(e);
   };
@@ -21,6 +22,6 @@ const NewsEditor = (props: Props) => {
       defaultValue={props.content}
     />
   );
-};
+});
 
-export default NewsEditor;
+export default Editor;

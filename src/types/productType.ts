@@ -1,4 +1,3 @@
-import { CategoryType } from "./categoryType";
 import { TagType } from "./tagType";
 
 interface RatingsType {
@@ -17,7 +16,9 @@ export interface ProductType {
   star?: {
     count: number;
   };
+  sold?: number;
   ratings?: Array<RatingsType>;
+  averageStarRating?: number;
   category: string;
   tags: Array<TagType>;
   status?: boolean;
@@ -41,7 +42,9 @@ export const InitialProduct: ProductType = {
   star: {
     count: 0,
   },
+  sold: 0,
   ratings: [],
+  averageStarRating: 0,
   category: "",
   tags: [],
   status: false,
