@@ -3,7 +3,7 @@ import NewsModel from "./components/NewsModel";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import NewsList from "./components/NewsList";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { newsActions } from "../../actions/newsActions";
 import Search from "../../components/common/Search";
 import { setNewsModel } from "../../redux/slices/newsSlice";
@@ -17,9 +17,9 @@ const News = () => {
     dispatch(newsActions.gets());
   }, [dispatch]);
 
-  const handleOpenModel = () => {
+  const handleOpenModel = useCallback(() => {
     dispatch(setNewsModel({ open: true }));
-  };
+  }, [dispatch]);
 
   const filterNewsList = useMemo(
     () =>

@@ -256,4 +256,4 @@ const ShopModal = () => {
   );
 };
 
-export default memo(ShopModal);
+export default ShopModal;

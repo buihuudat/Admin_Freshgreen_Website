@@ -1,7 +1,7 @@
 import { Box, SpeedDial } from "@mui/material";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Search from "../../components/common/Search";
 import { productActions } from "../../actions/productActions";
 import { RootState } from "../../redux/store";
@@ -20,9 +20,9 @@ const Products = () => {
     dispatch(productActions.gets());
   }, [dispatch]);
 
-  const handleOpenModel = () => {
+  const handleOpenModel = useCallback(() => {
     dispatch(setProductModal({ open: true }));
-  };
+  }, [dispatch]);
 
   const filterProductsList = useMemo(
     () =>

@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { CategoryType } from "../../../types/categoryType";
@@ -65,7 +65,10 @@ const ProductModal = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state: RootState) => state.product.loading);
 
-  const [product, setProduct] = useState<ProductType>(data ?? InitialProduct);
+  const [isLoading, setIsLoading] = useState(false);
+  const [product, setProduct] = useState<ProductType>(() =>
+    data ? data : InitialProduct
+  );
   const [errText, setErrText] = useState(initialError);
   const [description, setDescription] = useState<string>(() =>
     data ? data.description : ""
@@ -74,18 +77,14 @@ const ProductModal = () => {
     data ? data.category : ""
   );
   const [tagsSelected, setTagsSelected] = useState<string[]>([]);
-
   const [shopSelected, setShopSelected] = useState<string>(() =>
     data ? data.shop : ""
   );
   const [tags, setTags] = useState<TagType[]>(() => (data ? data.tags : []));
-
   const [dataSelect, setDataSelect] = useState<DataSelect>({
     categories: [],
     tags: [],
   });
-
-  console.log(product);
 
   // get data select
   useEffect(() => {
@@ -166,6 +165,7 @@ const ProductModal = () => {
       const formData = new FormData(e.target);
 
       const newProduct: ProductType = {
+        ...product,
         images: await Promise.all(
           product.images.map((image) => imageUpload(image))
         ),
@@ -248,9 +248,14 @@ const ProductModal = () => {
 
       if (err) return;
 
+      setIsLoading(true);
       setErrText(initialError);
 
-      await dispatch(productActions.create(newProduct))
+      await dispatch(
+        data
+          ? productActions.update(newProduct)
+          : productActions.create(newProduct)
+      )
         .unwrap()
         .then(() => {
           dispatch(setProductModal({ open: false }));
@@ -275,16 +280,20 @@ const ProductModal = () => {
                   break;
               }
             });
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
     [
+      data,
       dispatch,
       category,
       description,
-      product.images,
       shopSelected,
       tags,
       dataSelect.categories,
+      product,
     ]
   );
 
@@ -473,7 +482,7 @@ const ProductModal = () => {
             variant="contained"
             color="success"
             fullWidth
-            loading={loading}
+            loading={isLoading}
             type="submit"
           >
             {data ? "Update" : "Create"}
@@ -484,4 +493,4 @@ const ProductModal = () => {
   );
 };
 
-export default memo(ProductModal);
+export default ProductModal;
