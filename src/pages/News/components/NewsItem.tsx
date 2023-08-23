@@ -33,7 +33,7 @@ const NewsItem = memo((props: NewsItemProps) => {
         const { data } = await userApi.getUser(props.news.author);
         setAuthorInfo(data);
       } catch (error) {
-        throw error;
+        return false;
       }
     }
   }, [props.news.author]);

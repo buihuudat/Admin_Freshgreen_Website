@@ -2,13 +2,13 @@ import { VoucherActionsType } from "../../actions/voucherActions";
 import axiosClient from "./axiosClient";
 
 export const voucherApi = {
-  gets: () => axiosClient.get("/voucher"),
+  gets: () => axiosClient.get("/vouchers"),
   get: (payload: VoucherActionsType) =>
-    axiosClient.get(`/voucher/${payload.voucher}`),
+    axiosClient.get(`/vouchers/${payload.voucher}`),
   create: (payload: VoucherActionsType) =>
-    axiosClient.post("/voucher", payload),
+    axiosClient.post("/vouchers", payload),
   update: (payload: VoucherActionsType) =>
-    axiosClient.put(`/voucher/${payload._id}`, payload),
+    axiosClient.put(`/vouchers/${payload._id}`, payload),
   delete: (payload: VoucherActionsType) =>
-    axiosClient.patch(`/voucher/${payload._id}`),
+    axiosClient.patch(`/vouchers/${payload._id}`),
 };

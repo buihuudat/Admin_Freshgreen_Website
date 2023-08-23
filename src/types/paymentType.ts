@@ -1,12 +1,12 @@
 export enum StatusPayment {
-  spending,
+  pending,
   falure,
   success,
 }
 
 export interface PaymentType {
   user: string;
-  status: "spending" | "falure" | "success";
+  status: "pending" | "falure" | "success";
   method: string;
   amount: number;
   transactionId: string;

@@ -36,12 +36,13 @@ const Products = () => {
 
   return (
     <Box>
-      <Search
-        placeholder="product..."
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-      <ProductModal />
+      <Box mb={4}>
+        <Search
+          placeholder="product..."
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+      </Box>
       <ProductList products={filterProductsList} />
       <SpeedDial
         ariaLabel="Create an product"
@@ -53,6 +54,8 @@ const Products = () => {
         icon={<SpeedDialIcon />}
         onClick={handleOpenModel}
       />
+
+      <ProductModal />
     </Box>
   );
 };

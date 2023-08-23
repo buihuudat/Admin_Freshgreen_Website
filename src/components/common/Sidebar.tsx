@@ -26,7 +26,7 @@ import { Avatar, Button, Card, Typography } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { authAction } from "../../actions/authActions";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-const drawerWidth = 250;
+const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -171,7 +171,7 @@ const UserInfo: React.FC<UserInfoProps> = React.memo(({ open }) => {
           mx: "auto",
           width: open ? 100 : 40,
           height: open ? 100 : 40,
-          border: `8px solid ${mainColor}`,
+          border: `5px solid ${mainColor}`,
         }}
         alt={user?.fullname?.firstname}
       />
@@ -199,6 +199,9 @@ export default function Sidebar() {
     <Box sx={{ display: "flex" }}>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
+          <Typography fontWeight={600} fontSize={23} color={mainColor}>
+            {open ? "Bui Huu Dat" : ""}
+          </Typography>
           <IconButton onClick={() => setOpen(!open)}>
             {!open ? <FormatListBulletedIcon /> : <ChevronLeftIcon />}
           </IconButton>
@@ -211,7 +214,7 @@ export default function Sidebar() {
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  px: 2,
                   background: pathname === data.path ? mainColor : "",
                 }}
                 onClick={() => navigate(data.path)}
@@ -239,9 +242,9 @@ export default function Sidebar() {
             <ListItem key={index} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
+                  minHeight: 45,
                   justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  px: 2,
                   background: pathname === data.path ? mainColor : "",
                 }}
                 onClick={() => navigate(data.path)}

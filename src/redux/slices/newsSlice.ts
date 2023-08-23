@@ -9,6 +9,7 @@ import {
 
 interface InitialProps {
   newsList: NewsType[];
+  totalNews: number;
   isLoading: boolean;
   modal: {
     open: boolean;
@@ -18,6 +19,7 @@ interface InitialProps {
 
 const initialState: InitialProps = {
   newsList: [],
+  totalNews: 0,
   isLoading: false,
   modal: {
     open: false,
@@ -39,7 +41,8 @@ export const newsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(newsActions.gets.fulfilled, (state, action) => {
-        state.newsList = action.payload;
+        state.newsList = action.payload.newsList;
+        state.totalNews = action.payload.totalNews;
       })
       .addCase(newsActions.create.fulfilled, (state, action) => {
         state.newsList.push(action.payload);

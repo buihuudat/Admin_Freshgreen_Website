@@ -52,7 +52,7 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
 
   return (
     <Box>
-      <Card sx={{ width: 300, height: 550 }}>
+      <Card sx={{ width: 300, height: 500 }}>
         {/* shop info */}
         <CardActionArea
           sx={{
@@ -60,12 +60,13 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
             flexDirection: "row",
             alignItems: "center",
             gap: 1,
+            pt: 1,
           }}
         >
           <Avatar
             src={shopInfo?.image}
             alt={shopInfo?.name}
-            sx={{ width: 30, height: 30 }}
+            sx={{ width: 40, height: 40 }}
           />
           <Typography>{shopInfo.name || "Anonymous"}</Typography>
         </CardActionArea>
@@ -86,7 +87,7 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
             fontWeight={600}
             color={"red"}
           >
-            sold:{product.sold}
+            count:{product.currentQuantity}
           </Typography>
           <Typography
             fontSize={"13"}
@@ -94,14 +95,13 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
             fontWeight={600}
             color={"red"}
           >
-            count:{product.currentQuantity}
+            sold:{product.sold}
           </Typography>
         </CardContent>
         <CardMedia
           component={"img"}
           src={product.images[0]}
-          height={250}
-          sx={{ objectFit: "cover" }}
+          sx={{ objectFit: "cover", height: 200 }}
         />
         <CardContent>
           <Typography

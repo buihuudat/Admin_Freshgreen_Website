@@ -63,7 +63,6 @@ const ProductModal = () => {
     (state: RootState) => state.product.modal
   );
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state: RootState) => state.product.loading);
 
   const [isLoading, setIsLoading] = useState(false);
   const [product, setProduct] = useState<ProductType>(() =>
@@ -112,6 +111,7 @@ const ProductModal = () => {
     setCategory("");
     setDescription("");
     setTagsSelected([]);
+    setIsLoading(false);
     dispatch(setProductModal({ open: false }));
   }, [dispatch]);
 
@@ -137,12 +137,13 @@ const ProductModal = () => {
       return;
     }
 
-    images?.map(({ data }: { data: any }) => {
-      setProduct((prevProduct) => ({
-        ...prevProduct,
-        images: [...prevProduct.images, data],
-      }));
-    });
+    images?.length &&
+      images?.map(({ data }: { data: any }) => {
+        setProduct((prevProduct) => ({
+          ...prevProduct,
+          images: [...prevProduct.images, data],
+        }));
+      });
   };
 
   // handle remove images
@@ -158,17 +159,14 @@ const ProductModal = () => {
     [product.images]
   );
 
-  const handleProduct = useCallback(
+  const handleCreateProduct = useCallback(
     async (e: ChangeEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const formData = new FormData(e.target);
 
-      const newProduct: ProductType = {
-        ...product,
-        images: await Promise.all(
-          product.images.map((image) => imageUpload(image))
-        ),
+      let newProduct: ProductType = {
+        images: [],
         title: formData.get("title") as string,
         description,
         price: Number(formData.get("price")),
@@ -182,18 +180,18 @@ const ProductModal = () => {
 
       let err = false;
 
-      if (!newProduct.images.length) {
+      if (!product.images.length) {
         NotificationToast({
           message: "You haven't selected a photo yet",
           type: "error",
         });
-        return;
+        err = true;
       }
 
-      if (newProduct.title.length < 10 || newProduct.title.length > 50) {
+      if (newProduct.title.length < 3 || newProduct.title.length > 50) {
         setErrText((prev) => ({
           ...prev,
-          title: "Title must be between 10 and 50 characters long.",
+          title: "Title must be between 3 and 50 characters long.",
         }));
         err = true;
       }
@@ -207,10 +205,10 @@ const ProductModal = () => {
       }
 
       if (newProduct.description.length < 100) {
-        setErrText((prev) => ({
-          ...prev,
-          description: "Desciption must be at 100 characters.",
-        }));
+        NotificationToast({
+          message: "Desciption must be at 100 characters.",
+          type: "error",
+        });
         err = true;
       }
 
@@ -247,17 +245,27 @@ const ProductModal = () => {
       }
 
       if (err) return;
-
       setIsLoading(true);
       setErrText(initialError);
 
-      await dispatch(
-        data
-          ? productActions.update(newProduct)
-          : productActions.create(newProduct)
-      )
+      newProduct = {
+        ...newProduct,
+        images: await Promise.all(
+          product.images.map((image) => imageUpload(image))
+        ),
+      };
+
+      await dispatch(productActions.create(newProduct))
         .unwrap()
         .then(() => {
+          setErrText(initialError);
+          setProduct(InitialProduct);
+          setTags([]);
+          setShopSelected("");
+          setCategory("");
+          setDescription("");
+          setTagsSelected([]);
+          setIsLoading(false);
           dispatch(setProductModal({ open: false }));
         })
         .catch((err: any) => {
@@ -271,10 +279,7 @@ const ProductModal = () => {
                   }));
                   break;
                 case "description":
-                  setErrText((prev) => ({
-                    ...prev,
-                    description: e.msg,
-                  }));
+                  NotificationToast({ message: e.msg, type: "error" });
                   break;
                 default:
                   break;
@@ -286,7 +291,6 @@ const ProductModal = () => {
         });
     },
     [
-      data,
       dispatch,
       category,
       description,
@@ -304,7 +308,7 @@ const ProductModal = () => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style} component={"form"} onSubmit={handleProduct}>
+      <Box sx={style} component={"form"} onSubmit={handleCreateProduct}>
         <Typography align="center" fontWeight={600} fontSize={32} m={2}>
           {data ? "Update" : "Create"} product
         </Typography>
@@ -321,7 +325,7 @@ const ProductModal = () => {
               alignItems: "center",
             }}
           >
-            {product.images.map((image, index) => (
+            {(data?.images || product.images).map((image, index) => (
               <img
                 key={index}
                 src={image}
@@ -378,7 +382,10 @@ const ProductModal = () => {
             helperText={errText.title}
           />
 
-          <ProductEditor content={description} setContent={setDescription} />
+          <ProductEditor
+            content={data?.description ?? description}
+            setContent={setDescription}
+          />
 
           <Box
             sx={{

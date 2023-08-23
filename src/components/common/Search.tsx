@@ -2,6 +2,7 @@ import { styled, alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { ChangeEvent, memo, useCallback } from "react";
 
 interface SearchProps {
   placeholder: string;
@@ -17,10 +18,9 @@ const SearchForm = styled("div")(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
-  width: "100%",
+  width: "max-content",
   [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
+    // marginLeft: theme.spacing(1),
   },
 }));
 
@@ -48,9 +48,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Search = (props: SearchProps) => {
+const Search = memo((props: SearchProps) => {
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      props.setSearchQuery(e.target.value);
+    },
+    [props]
+  );
+
   return (
-    <Box>
+    <Box pb={1}>
       <SearchForm>
         <SearchIconWrapper>
           <SearchIcon />
@@ -58,11 +65,11 @@ const Search = (props: SearchProps) => {
         <StyledInputBase
           placeholder={`Search ${props.placeholder}...`}
           inputProps={{ "aria-label": "search" }}
-          onChange={(e) => props.setSearchQuery(e.target.value)}
+          onChange={handleChange}
         />
       </SearchForm>
     </Box>
   );
-};
+});
 
 export default Search;

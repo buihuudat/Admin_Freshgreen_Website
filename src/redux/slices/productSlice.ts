@@ -10,6 +10,7 @@ import {
 interface InitialStateProps {
   products: Array<ProductType>;
   product: ProductType;
+  totalProducts: number;
   loading: boolean;
   modal: {
     data?: ProductType;
@@ -20,6 +21,7 @@ interface InitialStateProps {
 const initialState: InitialStateProps = {
   products: [],
   product: InitialProduct,
+  totalProducts: 0,
   loading: false,
   modal: {
     data: undefined,
@@ -42,7 +44,8 @@ export const productSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(productActions.gets.fulfilled, (state, action) => {
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.totalProducts = action.payload.totalProducts;
       })
       .addCase(productActions.get.fulfilled, (state, action) => {
         state.product = action.payload;

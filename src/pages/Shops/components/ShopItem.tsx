@@ -19,8 +19,12 @@ const ShopItem = memo(({ shop }: { shop: ShopType }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const res = await userApi.getUser(shop.user);
-      if (res.data) setUserInfo(res.data);
+      try {
+        const res = await userApi.getUser(shop.user);
+        if (res.data) setUserInfo(res.data);
+      } catch (error) {
+        return false;
+      }
     };
     getUser();
   }, [shop.user]);

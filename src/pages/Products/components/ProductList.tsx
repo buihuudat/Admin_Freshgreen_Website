@@ -21,7 +21,6 @@ const ProductList = memo(({ products }: { products: ProductType[] }) => {
         flexDirection: "row",
         flexWrap: "wrap",
         gap: 5,
-        px: 3,
       }}
     >
       {products.map((product: ProductType) => (

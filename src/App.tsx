@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import NotFound from "./pages/NotFound";
 import { colorSystem } from "./utils/handlers/getSystemColor";
 import AdminLayout from "./components/layouts/AdminLayout";
-import HomePage from "./pages";
+import HomePage from "./pages/HomePage";
 import Orders from "./pages/Orders";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile";
@@ -19,6 +19,7 @@ import Categories from "./pages/Categories";
 import Tags from "./pages/Tags";
 import AuthLayout from "./components/layouts/AuthLayout";
 import Login from "./pages/Login";
+import { blue } from "@mui/material/colors";
 
 // const Login = lazy(() => import("./pages/Login"));
 // const AdminLayout = lazy(() => import("./components/layouts/AdminLayout"));
@@ -37,7 +38,7 @@ import Login from "./pages/Login";
 const App = () => {
   const theme = createTheme({
     palette: {
-      mode: !colorSystem() || "light",
+      mode: !colorSystem() || "dark",
     },
   });
 

@@ -4,14 +4,14 @@ import axiosClient from "./axiosClient";
 
 export const userApi = {
   changeAvatar: (payload: changeAvatarProps) =>
-    axiosClient.post(`/user/${payload._id}/change-avatar`, payload),
+    axiosClient.post(`/users/${payload._id}/change-avatar`, payload),
 
   updateUser: (payload: UserType) =>
-    axiosClient.put(`/user/${payload._id}/`, payload),
+    axiosClient.put(`/users/${payload._id}/`, payload),
 
-  deleteUser: (id: string) => axiosClient.patch(`/user/${id}`),
+  deleteUser: (id: string) => axiosClient.patch(`/users/${id}`),
 
-  getUsers: () => axiosClient.get("/user/gets"),
+  getUsers: () => axiosClient.get("/users/gets"),
 
-  getUser: (id: string) => axiosClient.get(`/user/${id}`),
+  getUser: (id: string) => axiosClient.get(`/users/${id}`),
 };
