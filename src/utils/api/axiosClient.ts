@@ -2,7 +2,8 @@ import axios from "axios";
 import queryString from "query-string";
 import { getToken } from "../handlers/tokenHandler";
 
-const baseURL = "http://localhost:5000/api/v1";
+// const baseURL = "http://localhost:5000/api/v1";
+export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
 export const clientURL = "https://web-ecommerce-bhd.vercel.app";
 
 const axiosClient = axios.create({

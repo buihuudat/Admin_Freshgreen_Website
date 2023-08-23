@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { lazy } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ToastContainer } from "react-toastify";
@@ -19,7 +18,6 @@ import Categories from "./pages/Categories";
 import Tags from "./pages/Tags";
 import AuthLayout from "./components/layouts/AuthLayout";
 import Login from "./pages/Login";
-import { blue } from "@mui/material/colors";
 
 // const Login = lazy(() => import("./pages/Login"));
 // const AdminLayout = lazy(() => import("./components/layouts/AdminLayout"));
