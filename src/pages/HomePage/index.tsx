@@ -20,15 +20,15 @@ dayjs.extend(isBetweenPlugin);
 
 const HomePage = () => {
   const orderData = useAppSelector((state: RootState) => state.order.data);
-  const [select, setSelect] = useState("day");
+  const [select, setSelect] = useState<"day" | "month" | "year">("day");
   const [orders, setOrders] = useState<OrderType[]>(orderData);
   const [date, setDate] = useState<Dayjs | null>(
     dayjs(moment().format("yyyy-MM-D"))
   );
   const [dateSelected, setDateSelected] = useState({
-    d: 1,
-    m: 1,
-    y: 2000,
+    d: +moment().format("D"),
+    m: +moment().format("M"),
+    y: +moment().format("yyyy"),
   });
   const [spend, setSpend] = useState<{ name: string; value: number }>({
     name: "day",
@@ -43,7 +43,7 @@ const HomePage = () => {
   });
 
   const currentDate = useMemo(
-    (v?: string) => moment(date?.toString()).format(v || "L"),
+    () => moment(date?.toString()).format("L"),
     [date]
   );
 
@@ -56,44 +56,39 @@ const HomePage = () => {
   }, [currentDate]);
 
   useEffect(() => {
+    let selectDate: "d" | "m" | "y";
+    let format: "D" | "M" | "yyyy";
+    let name: "Ngày" | "Tháng" | "Năm";
     switch (select) {
       case "day":
-        setSpend({ name: "Ngày", value: dateSelected.d });
-        setOrders(
-          orderData.filter(
-            (data) =>
-              +moment(data.order.createdAt).format("D") === dateSelected.d
-          )
-        );
+        name = "Ngày";
+        selectDate = "d";
+        format = "D";
         break;
       case "month":
-        setSpend({ name: "Tháng", value: dateSelected.m });
-        setOrders(
-          orderData.filter(
-            (data) =>
-              +moment(data.order.createdAt).format("M") === dateSelected.m
-          )
-        );
+        name = "Tháng";
+        selectDate = "m";
+        format = "M";
         break;
       case "year":
-        setSpend({ name: "Năm", value: dateSelected.y });
-        setOrders(
-          orderData.filter(
-            (data) =>
-              +moment(data.order.createdAt).format("yyyy") === dateSelected.y
-          )
-        );
+        name = "Năm";
+        selectDate = "y";
+        format = "yyyy";
         break;
       default:
-        setSpend({ name: "Ngày", value: dateSelected.d });
-        setOrders(
-          orderData.filter(
-            (data) =>
-              +moment(data.order.createdAt).format("D") === dateSelected.d
-          )
-        );
+        name = "Ngày";
+        selectDate = "d";
+        format = "D";
         break;
     }
+    setSpend({ name, value: dateSelected[selectDate] });
+
+    const filteredOrders = orderData.filter(
+      (data) =>
+        +moment(data.order.createdAt).format(format) ===
+        dateSelected[selectDate]
+    );
+    setOrders(filteredOrders);
   }, [dateSelected, select, orderData]);
 
   useEffect(() => {
@@ -155,17 +150,20 @@ const HomePage = () => {
   }, [ordersData]);
 
   const totalPrice = useMemo(() => {
-    return ordersData
-      .filter((order) => order.status === OrderStatus.done)
-      .reduce((prev, order) => prev + order.totalPrice, 0);
+    return ordersData.reduce((acc, cur) => {
+      if (cur.status === OrderStatus.done) {
+        return acc + cur.totalPrice;
+      }
+      return acc;
+    }, 0);
   }, [ordersData]);
 
   const orderTable = useMemo(() => {
-    const products = orders
-      .map((data) => data.order.products)
-      .flatMap((product) => product);
+    const products = orders.reduce((acc: ProductType[], cur) => {
+      return acc.concat(cur.order.products);
+    }, []);
 
-    return products.map((product: ProductType, index) => ({
+    return products.map((product: ProductType, index: number) => ({
       id: `${product._id?.toString()} + ${index} `,
       time: moment(product.createdAt).format("D-MM-yyyy"),
       image: product.images[0],

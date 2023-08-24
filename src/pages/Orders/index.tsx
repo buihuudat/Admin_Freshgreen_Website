@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { orderActions } from "../../actions/orderActions";
+import { useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { Box, LinearProgress } from "@mui/material";
 import OrderItem from "./components/OrderItem";

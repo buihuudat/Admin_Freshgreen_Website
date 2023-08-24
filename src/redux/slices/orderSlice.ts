@@ -29,12 +29,13 @@ export const orderSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(orderActions.gets.fulfilled, (state, action) => {
-        const orders = action.payload.flatMap((order: DataProps) =>
-          order.orders.map((orderItem: OrderItemType) => ({
-            order: orderItem,
-            user: order.user,
+        const orders = action.payload.flatMap((data: DataProps) =>
+          data.orders.map((order: OrderItemType) => ({
+            order,
+            user: data.user,
           }))
         );
+
         state.data = orders;
       })
       .addCase(orderActions.submitStatusOrder.fulfilled, (state, action) => {

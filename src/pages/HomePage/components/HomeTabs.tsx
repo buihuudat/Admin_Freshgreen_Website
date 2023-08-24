@@ -5,11 +5,14 @@ import Tab from "@mui/material/Tab";
 import { Typography } from "@mui/material";
 
 interface HomeTabsProps {
-  select: string;
-  setSelect: (select: string) => void;
+  select: "day" | "month" | "year";
+  setSelect: (select: "day" | "month" | "year") => void;
 }
 export default function HomeTabs(props: HomeTabsProps) {
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (
+    event: React.SyntheticEvent,
+    newValue: "day" | "month" | "year"
+  ) => {
     props.setSelect(newValue);
   };
 
