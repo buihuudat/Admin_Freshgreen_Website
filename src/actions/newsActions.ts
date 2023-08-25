@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { newsApi } from "../utils/api/newsApi";
-import { NewsType } from "../types/newsType";
+import { NewNewsType, NewsType } from "../types/newsType";
 import { AxiosResponse } from "axios";
 import { NotificationToast } from "../utils/handlers/NotificationToast";
 
@@ -20,42 +20,48 @@ export const newsActions = {
     } catch (error) {}
   }),
 
-  create: createAsyncThunk("news/create", async (news: NewsType, thunkAPI) => {
-    try {
-      const res: AxiosResponse<NewsType> = await newsApi.create(news);
-      NotificationToast({
-        message: "Created news successfully",
-        type: "success",
-      });
-      return res.data;
-    } catch (error: any) {
-      NotificationToast({
-        message: "Created news failure",
-        type: "error",
-      });
-      if (error.data) {
-        return thunkAPI.rejectWithValue(error.data);
+  create: createAsyncThunk(
+    "news/create",
+    async (news: NewNewsType, thunkAPI) => {
+      try {
+        const res: AxiosResponse<NewsType> = await newsApi.create(news);
+        NotificationToast({
+          message: "Created news successfully",
+          type: "success",
+        });
+        return res.data;
+      } catch (error: any) {
+        NotificationToast({
+          message: "Created news failure",
+          type: "error",
+        });
+        if (error.data) {
+          return thunkAPI.rejectWithValue(error.data);
+        }
+        throw error;
       }
-      throw error;
     }
-  }),
+  ),
 
-  update: createAsyncThunk("news/update", async (news: NewsType, thunkAPI) => {
-    try {
-      const res = await newsApi.update(news);
-      NotificationToast({
-        message: "News updated successfully",
-        type: "success",
-      });
-      return res.data;
-    } catch (error: any) {
-      if (error.data) {
-        NotificationToast({ message: "News updated failure", type: "error" });
-        return thunkAPI.rejectWithValue(error.data);
+  update: createAsyncThunk(
+    "news/update",
+    async (news: NewNewsType, thunkAPI) => {
+      try {
+        const res = await newsApi.update(news);
+        NotificationToast({
+          message: "News updated successfully",
+          type: "success",
+        });
+        return res.data;
+      } catch (error: any) {
+        if (error.data) {
+          NotificationToast({ message: "News updated failure", type: "error" });
+          return thunkAPI.rejectWithValue(error.data);
+        }
+        throw error;
       }
-      throw error;
     }
-  }),
+  ),
 
   delete: createAsyncThunk("news/delete", async (_id: string) => {
     try {

@@ -57,7 +57,7 @@ const Search = memo((props: SearchProps) => {
   );
 
   return (
-    <Box pb={1}>
+    <Box>
       <SearchForm>
         <SearchIconWrapper>
           <SearchIcon />

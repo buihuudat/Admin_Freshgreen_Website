@@ -1,10 +1,10 @@
-import { ProductType } from "../../types/productType";
+import { NewProductType, ProductType } from "../../types/productType";
 import axiosClient from "./axiosClient";
 
 export const productApi = {
   gets: () => axiosClient.get("/products"),
   get: (product: ProductType) => axiosClient.get(`/products/${product._id}`),
-  create: (newProduct: ProductType) =>
+  create: (newProduct: NewProductType) =>
     axiosClient.post("/products/create", newProduct),
   update: (newProduct: ProductType) =>
     axiosClient.put(`/products/${newProduct._id}`, newProduct),

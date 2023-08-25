@@ -6,41 +6,25 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo } from "react";
 import { NewsType } from "../../../types/newsType";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { UserType } from "../../../types/userType";
 import { useAppDispatch } from "../../../redux/hooks";
 import moment from "moment";
 import { setNewsModel } from "../../../redux/slices/newsSlice";
 import { useNavigate } from "react-router-dom";
 import { newsActions } from "../../../actions/newsActions";
-import { userApi } from "../../../utils/api/userApi";
 
 interface NewsItemProps {
   news: NewsType;
 }
 
 const NewsItem = memo((props: NewsItemProps) => {
-  const [authorInfo, setAuthorInfo] = useState<UserType>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const fetchAuthorData = useCallback(async () => {
-    if (props.news.author) {
-      try {
-        const { data } = await userApi.getUser(props.news.author);
-        setAuthorInfo(data);
-      } catch (error) {
-        return false;
-      }
-    }
-  }, [props.news.author]);
-
-  useEffect(() => {
-    fetchAuthorData();
-  }, [fetchAuthorData]);
+  console.log(props.news);
 
   const handleView = () => {
     dispatch(setNewsModel({ open: true, data: props.news }));
@@ -98,12 +82,15 @@ const NewsItem = memo((props: NewsItemProps) => {
             <b
               style={{ cursor: "pointer", color: "green" }}
               onClick={() =>
-                navigate(`/users/${authorInfo?._id}`, {
-                  state: { user: authorInfo },
-                })
+                navigate(
+                  `/users/${props.news.author ? props.news.author?._id : ""}`,
+                  {
+                    state: { user: props.news?.author },
+                  }
+                )
               }
             >
-              {authorInfo?.username}
+              {props.news.author?.username}
             </b>
           </Typography>
           <Typography>

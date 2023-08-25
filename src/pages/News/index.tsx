@@ -1,4 +1,4 @@
-import { Box, SpeedDial } from "@mui/material";
+import { Box, LinearProgress, SpeedDial } from "@mui/material";
 import NewsModel from "./components/NewsModel";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -7,11 +7,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { newsActions } from "../../actions/newsActions";
 import Search from "../../components/common/Search";
 import { setNewsModel } from "../../redux/slices/newsSlice";
+import { RootState } from "../../redux/store";
 
 const News = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const dispatch = useAppDispatch();
-  const newsList = useAppSelector((state) => state.news.newsList);
+  const { newsList, isLoading } = useAppSelector(
+    (state: RootState) => state.news
+  );
 
   useEffect(() => {
     dispatch(newsActions.gets());
@@ -36,8 +39,13 @@ const News = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      <NewsModel />
-      <NewsList newsList={filterNewsList} />
+      <Box my={1}>
+        {isLoading ? (
+          <LinearProgress />
+        ) : (
+          <NewsList newsList={filterNewsList} />
+        )}
+      </Box>
       <SpeedDial
         ariaLabel="Create an news"
         sx={{
@@ -48,6 +56,7 @@ const News = () => {
         icon={<SpeedDialIcon />}
         onClick={handleOpenModel}
       />
+      <NewsModel />
     </Box>
   );
 };

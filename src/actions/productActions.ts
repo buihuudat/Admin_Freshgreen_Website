@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { productApi } from "../utils/api/productApi";
 import { NotificationToast } from "../utils/handlers/NotificationToast";
-import { ProductType } from "../types/productType";
+import { NewProductType, ProductType } from "../types/productType";
 
 export const productActions = {
   gets: createAsyncThunk("product/gets", async () => {
@@ -26,7 +26,7 @@ export const productActions = {
 
   create: createAsyncThunk(
     "product/create",
-    async (newProduct: ProductType, thunkAPI) => {
+    async (newProduct: NewProductType, thunkAPI) => {
       try {
         const res = await productApi.create(newProduct);
         NotificationToast({

@@ -1,20 +1,10 @@
-import { Box, LinearProgress, Typography } from "@mui/material";
-import { useAppSelector } from "../../../redux/hooks";
-import { RootState } from "../../../redux/store";
+import { Box } from "@mui/material";
 import { memo } from "react";
 import { ProductType } from "../../../types/productType";
 import ProductItem from "./ProductItem";
 
 const ProductList = memo(({ products }: { products: ProductType[] }) => {
-  const loading = useAppSelector((state: RootState) => state.product.loading);
-
-  return loading ? (
-    <LinearProgress />
-  ) : !products.length ? (
-    <Typography fontSize={23} fontWeight={600} align="center">
-      There are no product yet!
-    </Typography>
-  ) : (
+  return (
     <Box
       sx={{
         display: "flex",

@@ -106,53 +106,54 @@ export default function Users() {
     });
   }, [users, searchQuery]);
 
-  return isLoading ? (
-    <LinearProgress />
-  ) : (
-    <Box width={"100%"} display={"flex"} flexDirection={"column"} gap={5}>
-      <Box display={"flex"}>
-        <Search
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          placeholder="name, username or phone or email"
-        />
-        {isPending && <CircularProgress size={20} />}
-      </Box>
-      <Box>
-        <Typography fontWeight={600}>
-          Có tổng cộng {dataReSearch.length} người dùng
-        </Typography>
-        <DataGrid
-          getRowId={(user) => user._id}
-          sortModel={[{ field: "createdAt", sort: "desc" }]}
-          rows={dataReSearch}
-          columns={columns}
-          rowSelection={false}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-        />
-      </Box>
-      <Box>
-        <Typography fontWeight={600}>
-          Có {usersCreatedAccToDay.length} người dùng mới hôm nay
-        </Typography>
-        <DataGrid
-          sortModel={[{ field: "createdAt", sort: "desc" }]}
-          getRowId={(user) => user._id}
-          rows={usersCreatedAccToDay}
-          columns={columns}
-          rowSelection={false}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-        />
+  return (
+    <Box>
+      {isLoading && <LinearProgress />}
+      <Box width={"100%"} display={"flex"} flexDirection={"column"} gap={5}>
+        <Box display={"flex"}>
+          <Search
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            placeholder="name, username or phone or email"
+          />
+          {isPending && <CircularProgress size={20} />}
+        </Box>
+        <Box>
+          <Typography fontWeight={600}>
+            Có tổng cộng {dataReSearch.length} người dùng
+          </Typography>
+          <DataGrid
+            getRowId={(user) => user._id}
+            sortModel={[{ field: "createdAt", sort: "desc" }]}
+            rows={dataReSearch}
+            columns={columns}
+            rowSelection={false}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+          />
+        </Box>
+        <Box>
+          <Typography fontWeight={600}>
+            Có {usersCreatedAccToDay.length} người dùng mới hôm nay
+          </Typography>
+          <DataGrid
+            sortModel={[{ field: "createdAt", sort: "desc" }]}
+            getRowId={(user) => user._id}
+            rows={usersCreatedAccToDay}
+            columns={columns}
+            rowSelection={false}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+          />
+        </Box>
       </Box>
     </Box>
   );

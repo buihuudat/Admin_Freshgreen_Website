@@ -18,7 +18,7 @@ import { tagActions } from "../../../actions/tagActions";
 import { NotificationToast } from "../../../utils/handlers/NotificationToast";
 import { RootState } from "../../../redux/store";
 import { newsActions } from "../../../actions/newsActions";
-import { NewsType } from "../../../types/newsType";
+import { NewNewsType, NewsType } from "../../../types/newsType";
 import { setNewsModel } from "../../../redux/slices/newsSlice";
 import Editor from "../../../components/common/Editor";
 
@@ -107,13 +107,13 @@ const NewsModel = () => {
   };
 
   const handlePostNews = async () => {
-    const newsData: NewsType = {
+    const newsData: NewNewsType = {
       _id: data?._id,
       title: title || (data ? data.title : ""),
       category: category !== "" ? category : dataSelect.categories[0].name,
       tags: tags.length ? tags : data ? data.tags : [],
       content: content || (data ? data.content : ""),
-      author: userId,
+      author: userId as string,
     };
 
     if (newsData.title.length < 10) {

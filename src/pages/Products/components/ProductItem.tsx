@@ -15,30 +15,13 @@ import { formatDateInput } from "../../../utils/handlers/formatDateInput";
 import { formattedAmount } from "../../../utils/handlers/formatMoney";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { InitialShop, ShopType } from "../../../types/shopType";
 import { useAppDispatch } from "../../../redux/hooks";
-import { shopAPI } from "../../../utils/api/shopApi";
 import { productActions } from "../../../actions/productActions";
 import EditIcon from "@mui/icons-material/Edit";
 import { setProductModal } from "../../../redux/slices/productSlice";
 
 const ProductItem = memo(({ product }: { product: ProductType }) => {
-  const [shopInfo, setShopInfo] = useState<ShopType>(InitialShop);
   const dispatch = useAppDispatch();
-
-  const getShop = useCallback(async () => {
-    try {
-      const shop = await shopAPI.get(product.shop);
-      if (shop.data?._id) {
-        setShopInfo(shop.data);
-      }
-    } catch (error) {
-      return false;
-    }
-  }, [product.shop]);
-  useEffect(() => {
-    getShop();
-  }, [getShop]);
 
   const handleView = () => {};
 
@@ -64,11 +47,11 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
           }}
         >
           <Avatar
-            src={shopInfo?.image}
-            alt={shopInfo?.name}
+            src={product.shop.user?.avatar}
+            alt={product.shop.name}
             sx={{ width: 40, height: 40 }}
           />
-          <Typography>{shopInfo.name || "Anonymous"}</Typography>
+          <Typography>{product.shop.name || "Anonymous"}</Typography>
         </CardActionArea>
         <CardContent
           sx={{

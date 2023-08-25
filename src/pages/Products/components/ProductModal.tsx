@@ -15,7 +15,11 @@ import { categoryActions } from "../../../actions/categoryActions";
 import { tagActions } from "../../../actions/tagActions";
 import { NotificationToast } from "../../../utils/handlers/NotificationToast";
 import { RootState } from "../../../redux/store";
-import { InitialProduct, ProductType } from "../../../types/productType";
+import {
+  InitialProduct,
+  NewProductType,
+  ProductType,
+} from "../../../types/productType";
 import AddIcon from "@mui/icons-material/Add";
 import { setProductModal } from "../../../redux/slices/productSlice";
 import { getBaseImage } from "../../../utils/handlers/getBaseImage";
@@ -77,7 +81,7 @@ const ProductModal = () => {
   );
   const [tagsSelected, setTagsSelected] = useState<string[]>([]);
   const [shopSelected, setShopSelected] = useState<string>(() =>
-    data ? data.shop : ""
+    data ? (data.shop._id as string) : ""
   );
   const [tags, setTags] = useState<TagType[]>(() => (data ? data.tags : []));
   const [dataSelect, setDataSelect] = useState<DataSelect>({
@@ -165,7 +169,7 @@ const ProductModal = () => {
 
       const formData = new FormData(e.target);
 
-      let newProduct: ProductType = {
+      let newProduct: NewProductType = {
         images: [],
         title: formData.get("title") as string,
         description,

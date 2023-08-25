@@ -42,7 +42,7 @@ const AdminLayout = () => {
           <Sidebar />
         </Box>
 
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component="main" sx={{ flexGrow: 1 }}>
           <Outlet />
         </Box>
       </Box>

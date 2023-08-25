@@ -37,7 +37,13 @@ export default function Tabs(props: TabProps) {
   ];
 
   return (
-    <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       <TabContext value={value}>
         <TabList onChange={handleChange}>
           {TabData.map((data) => (

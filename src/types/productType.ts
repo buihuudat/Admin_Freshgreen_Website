@@ -5,6 +5,14 @@ interface RatingsType {
   count: number;
 }
 
+interface ShopType {
+  _id?: string;
+  name: string;
+  user?: {
+    _id?: string;
+    avatar: string;
+  };
+}
 export interface ProductType {
   _id?: string;
   images: string[];
@@ -25,11 +33,15 @@ export interface ProductType {
   quantity: number;
   currentQuantity?: number;
   brand: string;
-  shop: string;
+  shop: ShopType;
   comments?: Array<string>;
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type NewProductType = Omit<ProductType, "shop"> & {
+  shop: string;
+};
 
 export const InitialProduct: ProductType = {
   _id: "",
@@ -51,7 +63,9 @@ export const InitialProduct: ProductType = {
   quantity: 0,
   currentQuantity: 0,
   brand: "",
-  shop: "",
+  shop: {
+    name: "",
+  },
   comments: [],
   createdAt: "",
   updatedAt: "",

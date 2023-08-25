@@ -1,4 +1,4 @@
-import { Box, SpeedDial } from "@mui/material";
+import { Box, LinearProgress, SpeedDial, Typography } from "@mui/material";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -13,8 +13,12 @@ import { ProductType } from "../../types/productType";
 const Products = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const products = useAppSelector((state: RootState) => state.product.products);
+  const { products, loading } = useAppSelector(
+    (state: RootState) => state.product
+  );
   const dispatch = useAppDispatch();
+  const [filterProductsList, setFilterProductsList] =
+    useState<ProductType[]>(products);
 
   useEffect(() => {
     dispatch(productActions.gets());
@@ -24,15 +28,15 @@ const Products = () => {
     dispatch(setProductModal({ open: true }));
   }, [dispatch]);
 
-  const filterProductsList = useMemo(
-    () =>
-      products.length
-        ? products.filter((product: ProductType) =>
-            product?.title?.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        : [],
-    [products, searchQuery]
-  );
+  useEffect(() => {
+    const productsResearch = products.length
+      ? products.filter((product: ProductType) =>
+          product?.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : [];
+
+    setFilterProductsList(productsResearch);
+  }, [products, searchQuery]);
 
   return (
     <Box>
@@ -43,7 +47,15 @@ const Products = () => {
           setSearchQuery={setSearchQuery}
         />
       </Box>
-      <ProductList products={filterProductsList} />
+      {!products.length ? (
+        <LinearProgress />
+      ) : filterProductsList.length ? (
+        <ProductList products={filterProductsList} />
+      ) : (
+        <Typography fontSize={23} fontWeight={600} align="center">
+          There are no product yet!
+        </Typography>
+      )}
       <SpeedDial
         ariaLabel="Create an product"
         sx={{
