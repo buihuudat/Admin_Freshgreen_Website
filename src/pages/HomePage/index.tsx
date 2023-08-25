@@ -106,7 +106,10 @@ const HomePage = () => {
   }, [orders]);
 
   const ordersData = useMemo(() => {
-    return orders.flatMap((data) => data.order);
+    return _.orderBy(
+      orders.flatMap((data) => data.order),
+      ["createdAt"]
+    );
   }, [orders]);
 
   const pieData = useMemo(() => {
@@ -163,17 +166,20 @@ const HomePage = () => {
       return acc.concat(cur.order.products);
     }, []);
 
-    return products.map((product: ProductType, index: number) => ({
-      id: `${product._id?.toString()} + ${index} `,
-      time: moment(product.createdAt).format("D-MM-yyyy"),
-      image: product.images[0],
-      name: product.title,
-      price: Number(product.lastPrice),
-      category: product.category,
-      sold: product.sold || 0,
-      quantity: product.quantity,
-      status: product.status,
-    }));
+    return _.uniqBy(products, (product) => product.title).map(
+      (product: ProductType, index: number) => ({
+        id: `${product._id?.toString()} + ${index} `,
+        time: moment(product.createdAt).format("D-MM-yyyy"),
+        image: product.images[0],
+        name: product.title,
+        price: Number(product.lastPrice),
+        category: product.category,
+        sold: product.sold,
+        quantity: product.currentQuantity,
+        status: product.status,
+        count: 0,
+      })
+    );
   }, [orders]);
 
   return (

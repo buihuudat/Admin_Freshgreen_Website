@@ -19,8 +19,8 @@ interface OrderTableProps {
   name: string;
   price: number;
   category: string;
-  sold: number;
-  quantity: number;
+  sold?: number;
+  quantity?: number;
   status?: boolean;
 }
 
@@ -35,8 +35,9 @@ const OrderTable = ({ data }: { data: OrderTableProps[] }) => (
           <TableHeaderCell>Tên</TableHeaderCell>
           <TableHeaderCell>Giá</TableHeaderCell>
           <TableHeaderCell>Thể loại</TableHeaderCell>
-          <TableHeaderCell>Tồn</TableHeaderCell>
-          <TableHeaderCell>Đã bán</TableHeaderCell>
+          {/* <TableHeaderCell>Tồn</TableHeaderCell> */}
+          {/* <TableHeaderCell>Số lượng</TableHeaderCell> */}
+          {/* <TableHeaderCell>Đã bán</TableHeaderCell> */}
           <TableHeaderCell>Status</TableHeaderCell>
         </TableRow>
       </TableHead>
@@ -58,8 +59,8 @@ const OrderTable = ({ data }: { data: OrderTableProps[] }) => (
             <TableCell>
               <Text>{item.category}</Text>
             </TableCell>
-            <TableCell>{item.quantity}</TableCell>
-            <TableCell>{item.sold}</TableCell>
+            {/* <TableCell>{item.quantity}</TableCell>
+            <TableCell>{item.sold}</TableCell> */}
             <TableCell>
               <Badge color="emerald" icon={StatusOnlineIcon}>
                 {item.status}
