@@ -22,6 +22,7 @@ const ShopList = memo(({ shops }: { shops: ShopType[] }) => {
         flexWrap: "wrap",
         gap: 5,
         px: 3,
+        pt: 5,
       }}
     >
       {shops.map((shop: ShopType) => (

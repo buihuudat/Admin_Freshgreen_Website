@@ -4,7 +4,7 @@ import { NotificationToast } from "../utils/handlers/NotificationToast";
 import { CategoryType } from "../types/categoryType";
 
 export const categoryActions = {
-  gets: createAsyncThunk("/getCategories", async () => {
+  gets: createAsyncThunk("category/ges", async () => {
     try {
       const res = await categoryApi.gets();
       return res.data;

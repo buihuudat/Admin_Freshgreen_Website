@@ -12,10 +12,11 @@ interface CategoryProps {
 
 const CategoryForm = memo((props: CategoryProps) => {
   return (
-    <Box width={"20%"} display={"flex"} flexDirection={"column"} gap={5}>
+    <Box display={"flex"} flexDirection={"column"} gap={5}>
       <Typography align="center" fontWeight={600} fontSize={25}>
         Create a category
       </Typography>
+
       <Box>
         <TextField
           fullWidth

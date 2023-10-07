@@ -20,6 +20,8 @@ import NewspaperIcon from "@mui/icons-material/Newspaper";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import CategoryIcon from "@mui/icons-material/Category";
+import SettingsIcon from "@mui/icons-material/Settings";
+
 import TagIcon from "@mui/icons-material/Tag";
 import { mainColor } from "../../resources/color";
 import { Avatar, Button, Card, Typography } from "@mui/material";
@@ -143,6 +145,13 @@ const sidebarHandleData = [
     badge: 0,
     active: true,
   },
+  {
+    icon: <SettingsIcon />,
+    text: "Settings",
+    path: "/settings",
+    badge: 0,
+    active: true,
+  },
 ];
 
 interface UserInfoProps {
@@ -200,7 +209,7 @@ export default function Sidebar() {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <Typography fontWeight={600} fontSize={23} color={mainColor}>
-            {open ? "Bui Huu Dat" : ""}
+            {open ? "FreshGreen" : ""}
           </Typography>
           <IconButton onClick={() => setOpen(!open)}>
             {!open ? <FormatListBulletedIcon /> : <ChevronLeftIcon />}

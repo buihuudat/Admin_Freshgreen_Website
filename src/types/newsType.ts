@@ -9,6 +9,7 @@ export interface NewsType {
   _id?: string;
   title: string;
   category: string;
+  thumbnail: string;
   tags: TagType[];
   author?: AuthorType;
   content: string;

@@ -33,12 +33,23 @@ interface CategoryTableProps {
 export default function CategoryTable(props: CategoryTableProps) {
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 250 },
+    {
+      field: "image",
+      headerName: "Image",
+      width: 100,
+      renderCell: (params: GridRenderCellParams) => (
+        <img
+          src={params.row.image}
+          style={{ width: 50, height: 50, objectFit: "cover" }}
+        />
+      ),
+    },
     { field: "name", headerName: "Name", width: 100 },
     { field: "createdAt", headerName: "Created Date", width: 220 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <ActionButton
           category={params.row}
@@ -72,11 +83,11 @@ export default function CategoryTable(props: CategoryTableProps) {
           setSearchQuery={setSearchQuery}
           placeholder="name"
         />
-        {isPending && <CircularProgress size={20} />}
+        {isPending && <CircularProgress size={20} color={"success"} />}
       </Box>
       <Box>
         <Typography fontWeight={600}>
-          Có tổng cộng {dataReSearch.length} người dùng
+          Có tổng cộng {dataReSearch.length} thể loại
         </Typography>
         <DataGrid
           getRowId={(category) => category._id}

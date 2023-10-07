@@ -108,9 +108,9 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
               fontSize={28}
               fontWeight={600}
               color={"#555"}
-              sx={{ textDecoration: "line-through" }}
+              sx={{ textDecoration: "line-through", height: 40 }}
             >
-              {formattedAmount(product.price ?? 0)}
+              {product.discount ? formattedAmount(product.price ?? 0) : ""}
             </Typography>
           </Box>
           <Box

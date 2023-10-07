@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import SelectCategoryNews from "../../../components/SelectCategory";
-import { memo, useEffect, useState } from "react";
+import { ChangeEvent, memo, useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { CategoryType } from "../../../types/categoryType";
@@ -18,9 +18,12 @@ import { tagActions } from "../../../actions/tagActions";
 import { NotificationToast } from "../../../utils/handlers/NotificationToast";
 import { RootState } from "../../../redux/store";
 import { newsActions } from "../../../actions/newsActions";
-import { NewNewsType, NewsType } from "../../../types/newsType";
+import { NewNewsType } from "../../../types/newsType";
 import { setNewsModel } from "../../../redux/slices/newsSlice";
 import Editor from "../../../components/common/Editor";
+import AddIcon from "@mui/icons-material/Add";
+import { getBaseImage } from "../../../utils/handlers/getBaseImage";
+import { imageUpload } from "../../../utils/handlers/imageUploadClound";
 
 const style = {
   position: "absolute" as "absolute",
@@ -32,10 +35,11 @@ const style = {
   outline: "none",
   borderRadius: 2,
   p: 4,
-  width: "80%",
+  width: "70%",
   height: 900,
   display: "flex",
   flexDirection: "column",
+  overflow: "auto",
 };
 
 export interface DataSelect {
@@ -66,7 +70,7 @@ const NewsModel = () => {
   const [category, setCategory] = useState<string>(data?.category ?? "");
   const [tags, setTags] = useState<TagType[]>(data ? data.tags : []);
   const [tagsSelected, setTagsSelected] = useState<string[]>([]);
-
+  const [image, setImage] = useState("");
   // get data select
   useEffect(() => {
     const getData = async () => {
@@ -106,14 +110,21 @@ const NewsModel = () => {
     setTags(e.map((name: string) => ({ name })));
   };
 
+  const handleAddImage = async (e: ChangeEvent<HTMLInputElement>) => {
+    const imageBase64 = await getBaseImage(e);
+
+    imageBase64 && setImage(imageBase64[0].data?.toString()!);
+  };
+
   const handlePostNews = async () => {
     const newsData: NewNewsType = {
       _id: data?._id,
       title: title || (data ? data.title : ""),
       category: category !== "" ? category : dataSelect.categories[0].name,
       tags: tags.length ? tags : data ? data.tags : [],
+      thumbnail: (await imageUpload(image)) || (data ? data?.thumbnail : ""),
       content: content || (data ? data.content : ""),
-      author: userId as string,
+      author: userId!,
     };
 
     if (newsData.title.length < 10) {
@@ -179,6 +190,44 @@ const NewsModel = () => {
         <Typography align="center" fontWeight={600} fontSize={32} m={2}>
           {data ? "Update" : "Create"} news
         </Typography>
+
+        <img
+          alt="thumbnail"
+          src={image}
+          style={{
+            width: 200,
+            height: 200,
+            objectFit: "cover",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        />
+
+        <label htmlFor="contained-button-file" style={{ cursor: "pointer" }}>
+          <input
+            accept="image/*"
+            id="contained-button-file"
+            hidden
+            type="file"
+            onChange={handleAddImage}
+            multiple={false}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              color: "green",
+              flexDirection: "column",
+              width: "auto",
+              height: 100,
+            }}
+          >
+            <Typography align="center" fontWeight={600}>
+              Add images
+            </Typography>
+            <AddIcon fontSize="large" />
+          </Box>
+        </label>
 
         <Box display={"flex"} flexDirection={"column"} gap={2}>
           <TextField

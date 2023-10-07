@@ -83,10 +83,13 @@ const HomePage = () => {
     }
     setSpend({ name, value: dateSelected[selectDate] });
 
-    const filteredOrders = orderData.filter(
-      (data) =>
-        +moment(data.order.createdAt).format(format) ===
-        dateSelected[selectDate]
+    const dataSelect = `${dateSelected.m}/${dateSelected.d}/${dateSelected.y}`;
+
+    const filteredOrders = orderData.filter((data) =>
+      format === "D"
+        ? moment(data.order.createdAt).format("l") === dataSelect
+        : +moment(data.order.createdAt).format(format) ===
+          dateSelected[selectDate]
     );
     setOrders(filteredOrders);
   }, [dateSelected, select, orderData]);
@@ -227,7 +230,7 @@ const HomePage = () => {
             borderRadius: 2,
           }}
         >
-          <Date date={date} setDate={setDate} />
+          <Date setDate={setDate} />
         </Paper>
       </Box>
 

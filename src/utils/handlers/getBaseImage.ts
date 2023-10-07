@@ -8,7 +8,8 @@ export interface DataType {
 export const getBaseImage = async (
   e: ChangeEvent<HTMLInputElement>,
   maxWidth?: number,
-  maxHeight?: number
+  maxHeight?: number,
+  resize?: boolean
 ) => {
   if (!e.target.files) return;
   const files = Array.from(e.target.files);
@@ -23,7 +24,7 @@ export const getBaseImage = async (
           (maxWidth = 300),
           (maxHeight = 450)
         );
-        const result = await readFile(resizedImage);
+        const result = await readFile(resize ? resizedImage : file);
         data.push(result);
       } catch (error) {
         NotificationToast({

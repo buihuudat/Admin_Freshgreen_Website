@@ -164,7 +164,7 @@ const Vouchers = () => {
     dispatch(voucherActions.delete(voucher));
   };
   return (
-    <Box display={"flex"} gap={10} justifyContent={"center"}>
+    <Box display={"flex"} gap={10} padding={10} justifyContent={"center"}>
       <VoucherForm
         handleInputChange={handleInputChange}
         handleCancel={handleCancel}

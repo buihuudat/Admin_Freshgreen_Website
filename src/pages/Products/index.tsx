@@ -39,7 +39,7 @@ const Products = () => {
   }, [products, searchQuery]);
 
   return (
-    <Box>
+    <Box px={2}>
       <Box mb={4}>
         <Search
           placeholder="product..."

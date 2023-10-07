@@ -3,6 +3,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  CardMedia,
   IconButton,
   Typography,
 } from "@mui/material";
@@ -24,8 +25,6 @@ const NewsItem = memo((props: NewsItemProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  console.log(props.news);
-
   const handleView = () => {
     dispatch(setNewsModel({ open: true, data: props.news }));
   };
@@ -42,9 +41,10 @@ const NewsItem = memo((props: NewsItemProps) => {
         display: "flex",
         flexWrap: "wrap",
         flexDirection: "column",
-        bgcolor: "#ddd",
+        // bgcolor: "#ddd",
       }}
     >
+      <CardMedia image={props.news.thumbnail} sx={{ height: 300 }} />
       <CardContent sx={{ width: 300, height: 200 }}>
         <Typography
           sx={{

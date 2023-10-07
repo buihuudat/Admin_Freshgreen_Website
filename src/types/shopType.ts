@@ -1,6 +1,8 @@
+import { UserType } from "./userType";
+
 export interface ShopType {
   _id?: string;
-  user: string;
+  user: string | UserType;
   name: string;
   image?: string;
   description: string;

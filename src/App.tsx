@@ -18,6 +18,7 @@ import Categories from "./pages/Categories";
 import Tags from "./pages/Tags";
 import AuthLayout from "./components/layouts/AuthLayout";
 import Login from "./pages/Login";
+import Settings from "./pages/Settings";
 
 // const Login = lazy(() => import("./pages/Login"));
 // const AdminLayout = lazy(() => import("./components/layouts/AdminLayout"));
@@ -57,6 +58,7 @@ const App = () => {
           <Route path="/categories" element={<Categories />} />
           <Route path="/tags" element={<Tags />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
         <Route path="/" element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />

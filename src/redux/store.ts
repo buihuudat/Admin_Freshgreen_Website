@@ -8,6 +8,7 @@ import voucherSlice from "./slices/voucherSlice";
 import productSlice from "./slices/productSlice";
 import shopSlice from "./slices/shopSlice";
 import orderSlice from "./slices/orderSlice";
+import settingSlice from "./slices/settingSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     product: productSlice,
     shop: shopSlice,
     order: orderSlice,
+    settings: settingSlice,
   },
 });
 
