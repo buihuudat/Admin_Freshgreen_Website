@@ -36,7 +36,7 @@ const BillInfo = (order: OrderItemType) => {
         setColor("error");
         break;
       case OrderStatus.done:
-        setColor("success");
+        setColor(mainColor);
         break;
       default:
         setColor("primary");
@@ -45,14 +45,14 @@ const BillInfo = (order: OrderItemType) => {
   }, [order.status]);
 
   return (
-    <Box sx={{ p: 1 }}>
-      <hr />
+    <Box sx={{ p: 2 }}>
+      <hr style={{ paddingBottom: 10 }} />
       <Box sx={billInfoItem}>
         <Typography>Tình trạng đơn hàng</Typography>
         <Typography
           fontWeight={600}
           color={color}
-          sx={{ p: 0.3, outline: "1px solid #ddd", borderRadius: 5 }}
+          sx={{ p: 0.3, py: 0, outline: "1px solid #ddd", borderRadius: 5 }}
         >
           {order.status}
         </Typography>
@@ -80,7 +80,7 @@ const BillInfo = (order: OrderItemType) => {
       </Box>
       <Box sx={billInfoItem}>
         <Typography>Tổng số tiền:</Typography>
-        <Typography fontSize={23} color={mainColor} fontWeight={600}>
+        <Typography fontSize={23} color={"mainColor"} fontWeight={600}>
           {formattedAmount(order.totalPrice)}
         </Typography>
       </Box>

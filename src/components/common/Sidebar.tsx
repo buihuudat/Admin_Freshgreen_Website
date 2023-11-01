@@ -21,6 +21,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import CategoryIcon from "@mui/icons-material/Category";
 import SettingsIcon from "@mui/icons-material/Settings";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import TagIcon from "@mui/icons-material/Tag";
 import { mainColor } from "../../resources/color";
@@ -28,6 +29,7 @@ import { Avatar, Button, Card, Typography } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { authAction } from "../../actions/authActions";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import { RootState } from "../../redux/store";
 const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -146,6 +148,13 @@ const sidebarHandleData = [
     active: true,
   },
   {
+    icon: <NotificationsIcon />,
+    text: "Notifications",
+    path: "/notifications",
+    badge: 0,
+    active: true,
+  },
+  {
     icon: <SettingsIcon />,
     text: "Settings",
     path: "/settings",
@@ -204,6 +213,12 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const orders = useAppSelector((state: RootState) => state.order.data);
+  const orderBadge = React.useMemo(
+    () => orders.filter((order) => order.order.status === "pending").length,
+    [orders]
+  );
+
   return (
     <Box sx={{ display: "flex" }}>
       <Drawer variant="permanent" open={open}>
@@ -241,6 +256,9 @@ export default function Sidebar() {
                   primary={data.text}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
+                {data.text === "Orders" && (
+                  <Typography>{orderBadge}</Typography>
+                )}
               </ListItemButton>
             </ListItem>
           ))}

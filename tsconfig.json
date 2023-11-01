@@ -5,7 +5,7 @@
       "dom",
       "dom.iterable",
       "esnext"
-    ],
+    ],    
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "tailwind.config.js"  ]
+, "tailwind.config.js", "public/firebase-messaging-sw.js"  ]
 }

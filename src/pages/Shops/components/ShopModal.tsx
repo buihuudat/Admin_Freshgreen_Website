@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, memo, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { CategoryType } from "../../../types/categoryType";

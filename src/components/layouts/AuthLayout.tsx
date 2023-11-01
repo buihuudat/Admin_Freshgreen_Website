@@ -1,7 +1,7 @@
 import { LinearProgress } from "@mui/material";
 import { Suspense, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { verifyToken } from "../../utils/veryfyToken";
+import { verifyToken } from "../../utils/verifyToken";
 
 const AuthLayout = () => {
   const [isLoading, setIsLoading] = useState(true);

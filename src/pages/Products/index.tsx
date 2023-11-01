@@ -1,7 +1,7 @@
 import { Box, LinearProgress, SpeedDial, Typography } from "@mui/material";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Search from "../../components/common/Search";
 import { productActions } from "../../actions/productActions";
 import { RootState } from "../../redux/store";

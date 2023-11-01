@@ -3,9 +3,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { NotificationToast } from "../../../utils/handlers/NotificationToast";
 import { getBaseImage } from "../../../utils/handlers/getBaseImage";
 import { mainColor } from "../../../resources/color";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import { LoadingButton } from "@mui/lab";
@@ -14,7 +11,9 @@ import { imageUpload } from "../../../utils/handlers/imageUploadClound";
 import { UserType } from "../../../types/userType";
 import { SettingsType } from "../../../types/settingsType";
 import { useAppDispatch } from "../../../redux/hooks";
-
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/pagination";
 interface Props {
   settings: SettingsType;
   user: UserType;

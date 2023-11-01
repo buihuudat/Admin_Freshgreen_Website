@@ -9,6 +9,8 @@ import productSlice from "./slices/productSlice";
 import shopSlice from "./slices/shopSlice";
 import orderSlice from "./slices/orderSlice";
 import settingSlice from "./slices/settingSlice";
+import notificationSlice from "./slices/notificationSlice";
+import messageSlice from "./slices/messageSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +24,8 @@ export const store = configureStore({
     shop: shopSlice,
     order: orderSlice,
     settings: settingSlice,
+    notifications: notificationSlice,
+    messages: messageSlice,
   },
 });
 

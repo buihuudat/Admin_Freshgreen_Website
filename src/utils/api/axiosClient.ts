@@ -3,8 +3,9 @@ import queryString from "query-string";
 import { getToken } from "../handlers/tokenHandler";
 import { NotificationToast } from "../handlers/NotificationToast";
 
-// const baseURL = "http://localhost:5000/api/v1";
-export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
+export const host = "http://localhost:5000";
+const baseURL = `${host}/api/v1`;
+// export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
 export const clientURL = "https://web-ecommerce-bhd.vercel.app";
 
 const axiosClient = axios.create({

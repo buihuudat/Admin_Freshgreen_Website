@@ -17,15 +17,21 @@ const OrderActions = memo((props: Props) => {
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState<string>("");
   const [messageErr, setMessageErr] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = () => {
+    setIsLoading(true);
     dispatch(
       orderActions.submitStatusOrder({
         userId: user._id as string,
         orderId: order._id as string,
         status: OrderStatus.access,
       })
-    );
+    )
+      .unwrap()
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
   const handleRefure = () => {
     if (message.length < 5) {
@@ -51,6 +57,7 @@ const OrderActions = memo((props: Props) => {
         color="primary"
         variant="outlined"
         onClick={handleSubmit}
+        loading={isLoading}
       >
         Xác nhận đơn hàng
       </LoadingButton>
