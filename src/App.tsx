@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import { colorSystem } from "./utils/handlers/getSystemColor";
 import { lazy } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import { notificationOrder } from "./utils/handlers/onMessage";
 
 const Login = lazy(() => import("./pages/Login"));
 const AdminLayout = lazy(() => import("./components/layouts/AdminLayout"));
@@ -22,13 +23,16 @@ const Tags = lazy(() => import("./pages/Tags"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Notifications = lazy(() => import("./pages/Notification"));
+const Unit = lazy(() => import("./pages/Unit"));
 
 const App = () => {
   const theme = createTheme({
     palette: {
-      mode: !colorSystem() || "dark",
+      mode: colorSystem() || "dark",
     },
   });
+
+  // notificationOrder();
 
   return (
     <ThemeProvider theme={theme}>
@@ -45,6 +49,7 @@ const App = () => {
           <Route path="/shops" element={<Shops />} />
           <Route path="/vouchers" element={<Vouchers />} />
           <Route path="/categories" element={<Categories />} />
+          <Route path="/unit" element={<Unit />} />
           <Route path="/tags" element={<Tags />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />

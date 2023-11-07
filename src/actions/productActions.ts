@@ -47,7 +47,7 @@ export const productActions = {
 
   update: createAsyncThunk(
     "product/update",
-    async (newProduct: ProductType, thunkAPI) => {
+    async (newProduct: NewProductType, thunkAPI) => {
       try {
         const res = await productApi.update(newProduct);
         NotificationToast({

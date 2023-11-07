@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { verifyToken } from "../../utils/verifyToken";
 import { Box, LinearProgress } from "@mui/material";
 import Sidebar from "../common/Sidebar";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setUserReducer } from "../../redux/slices/userSlice";
 import { NotificationToast } from "../../utils/handlers/NotificationToast";
 import { orderActions } from "../../actions/orderActions";
@@ -14,30 +14,15 @@ import {
   requestPermissionNotification,
 } from "../../utils/handlers/getFCMToken";
 import PopupMessage from "../PopupMessage";
+import { RootState } from "../../redux/store";
 
 const AdminLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  onListentingMessage(dispatch);
 
-  const notificationOrder = () => {
-    socket.on("new-order", () => {
-      NotificationToast({ message: "Bạn có 1 đơn hàng mới", type: "default" });
-    });
-    socket.on("access-order", () => {
-      NotificationToast({
-        message: "Có một đợn hàng đã được giao thành công",
-        type: "default",
-      });
-    });
-    socket.on("refuse-order", () => {
-      NotificationToast({
-        message: "Có một đợn hàng đã bị từ chối",
-        type: "default",
-      });
-    });
-  };
+  const user = useAppSelector((state: RootState) => state.user.user);
+  user && onListentingMessage(dispatch, user._id!);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -51,7 +36,6 @@ const AdminLayout = () => {
         dispatch(orderActions.gets(isAuth._id!));
         socket.emit("admin-connect", { username: isAuth.username });
         requestPermissionNotification(isAuth._id!);
-        notificationOrder();
       } else {
         NotificationToast({
           message: "You are not Administractor",

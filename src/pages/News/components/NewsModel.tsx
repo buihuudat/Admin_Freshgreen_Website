@@ -92,6 +92,7 @@ const NewsModel = () => {
   const handleClose = () => {
     setErrText(initialError);
     setTitle("");
+    setImage("");
     setContent("");
     setTags([]);
     setCategory("");

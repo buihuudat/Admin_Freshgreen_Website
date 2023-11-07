@@ -1,5 +1,6 @@
 import { Card, Metric, Text } from "@tremor/react";
 import { formattedAmount } from "../../../utils/handlers/formatMoney";
+import { Box } from "@mui/material";
 
 interface CartProps {
   title: string;
@@ -33,7 +34,11 @@ interface CartProps {
 }
 
 const CartItem = (props: CartProps) => (
-  <Card className="w-64 mx-auto" decoration="top" decorationColor={props.color}>
+  <Card
+    className="w-60 mx-auto p-2"
+    decoration="top"
+    decorationColor={props.color}
+  >
     <Text>{props.title}</Text>
     <Metric>
       {props.type === "number"

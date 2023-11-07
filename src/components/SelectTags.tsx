@@ -27,7 +27,7 @@ export default function SelectTagsNews(props: SelectTagsNewsProps) {
           multiple
           value={props.tagSelected}
           onChange={(event: any) => props.handleSelectTags(event.target.value)}
-          input={<OutlinedInput label="Tag" />}
+          input={<OutlinedInput label={props.tagsData[0].name} />}
           renderValue={(selected) => selected.join(", ")}
           error={props.error !== ""}
         >

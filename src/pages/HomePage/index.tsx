@@ -15,6 +15,8 @@ import dayjs, { Dayjs } from "dayjs";
 import isBetweenPlugin from "dayjs/plugin/isBetween";
 import OrderTable from "./components/OrderTable";
 import { ProductType } from "../../types/productType";
+import TopUserTable, { OrderTableProps } from "./components/TopUserTable";
+import { addressOfUser } from "../../types/userType";
 
 dayjs.extend(isBetweenPlugin);
 
@@ -38,6 +40,7 @@ const HomePage = () => {
     pending: 0,
     access: 0,
     done: 0,
+    refuse: 0,
     payNow: 0,
     lastPay: 0,
   });
@@ -99,6 +102,8 @@ const HomePage = () => {
       pending: orders.filter((o) => o.order.status === OrderStatus.pending)
         .length,
       access: orders.filter((o) => o.order.status === OrderStatus.access)
+        .length,
+      refuse: orders.filter((o) => o.order.status === OrderStatus.refuse)
         .length,
       payNow: orders.filter((o) => o.order.pay.status === PayStatus.success)
         .length,
@@ -170,39 +175,78 @@ const HomePage = () => {
     }, []);
 
     return _.uniqBy(products, (product) => product.title).map(
-      (product: ProductType, index: number) => ({
-        id: `${product._id?.toString()} + ${index} `,
-        time: moment(product.createdAt).format("D-MM-yyyy"),
-        image: product.images[0],
-        name: product.title,
-        price: Number(product.lastPrice),
-        category: product.category,
-        sold: product.sold,
-        quantity: product.currentQuantity,
-        status: product.status,
-        count: 0,
-      })
+      (product: ProductType, index: number) => {
+        const totalSold = products.reduce((acc, cur) => {
+          return cur.title === product.title ? acc + cur.sold! : acc;
+        }, 0);
+
+        return {
+          id: `${product._id?.toString()} + ${index} `,
+          time: moment(product.createdAt).format("D-MM-yyyy"),
+          image: product.images[0],
+          name: product.title,
+          price: Number(product.lastPrice),
+          category: product.category,
+          sold: totalSold,
+          unit: product.unit,
+          quantity: product.currentQuantity,
+          status: product.status,
+          count: 0,
+          view: product.views!,
+        };
+      }
     );
   }, [orders]);
 
+  const topUserData = useMemo(() => {
+    const groupedOrders = _.groupBy(
+      orders.filter((o) => o.order.status === OrderStatus.done),
+      "user._id"
+    );
+
+    return _.map(groupedOrders, (groupedOrdersArray) => {
+      const user = groupedOrdersArray[0].user;
+      const totalSold = _.sumBy(groupedOrdersArray, (order) => {
+        return _.sumBy(order.order.products, "count");
+      });
+      const totalPrice = _.sumBy(groupedOrdersArray, (order) => {
+        return _.sumBy(order.order.products, "lastPrice");
+      });
+
+      return {
+        id: user._id!,
+        avatar: user.avatar!,
+        fullname: `${user.fullname.firstname} ${user.fullname.lastname}`,
+        phone: user.phone,
+        username: user.username,
+        address: addressOfUser(user.address)!,
+        sold: totalSold,
+        price: totalPrice,
+      };
+    }).slice(0, 10);
+  }, [orders]);
+
   return (
-    <div>
-      <HomeTabs select={select} setSelect={setSelect} />
-      <Typography
-        align="center"
-        fontWeight={600}
-        mb={1}
-        fontSize={25}
-        color={"#ddd"}
-      >
-        Thống kê Ngày {dateSelected.d} tháng {dateSelected.m} năm{" "}
-        {dateSelected.y}
-      </Typography>
+    <Box px={1}>
+      <Box>
+        <HomeTabs select={select} setSelect={setSelect} />
+        <Typography
+          align="center"
+          fontWeight={600}
+          mb={1}
+          fontSize={25}
+          color={"#ddd"}
+        >
+          Thống kê Ngày {dateSelected.d} tháng {dateSelected.m} năm{" "}
+          {dateSelected.y}
+        </Typography>
+      </Box>
 
       <Box display={"flex"} flexDirection={"row"}>
         <CartItem title="Access" value={order.access} color="blue" />
         <CartItem title="Pending" value={order.pending} color="orange" />
         <CartItem title="Done" value={order.done} color="green" />
+        <CartItem title="Refuse" value={order.refuse} color="red" />
         <CartItem
           title="Thanh toán online"
           value={order.payNow}
@@ -235,9 +279,13 @@ const HomePage = () => {
       </Box>
 
       <Box my={3}>
-        <OrderTable data={orderTable} />
+        <OrderTable data={_.orderBy(orderTable, ["sold"], "desc")} />
       </Box>
-    </div>
+
+      <Box>
+        <TopUserTable data={topUserData} />
+      </Box>
+    </Box>
   );
 };
 

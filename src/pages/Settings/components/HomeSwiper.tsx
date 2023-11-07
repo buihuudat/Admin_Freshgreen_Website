@@ -85,7 +85,7 @@ const HomeSwiper = (props: Props) => {
   return (
     <Paper sx={{ width: 800, padding: 5 }}>
       {isLoading && <LinearProgress />}
-      <Typography>Total: {settings.banners.images.length} images</Typography>
+      <Typography>Total: {settings.banners?.images.length} images</Typography>
       <Box>
         <Swiper
           slidesPerView={1}
@@ -99,7 +99,7 @@ const HomeSwiper = (props: Props) => {
           }}
           modules={[FreeMode, Pagination, Autoplay]}
         >
-          {(images.length ? images : settings.banners.images).map(
+          {(images.length ? images : settings.banners?.images)?.map(
             (image: string, index: number) => (
               <SwiperSlide key={index}>
                 <img

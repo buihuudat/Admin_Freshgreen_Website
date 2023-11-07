@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { Box, LinearProgress, Typography } from "@mui/material";
 import OrderItem from "./components/OrderItem";
 import Tabs from "./components/Tabs";
 import { OrderStatus } from "../../types/orderType";
 import Search from "../../components/common/Search";
+import { orderActions } from "../../actions/orderActions";
 
 const Orders = () => {
   const { data: orders, loading } = useAppSelector(
@@ -13,8 +14,18 @@ const Orders = () => {
   );
   const [value, setValue] = useState<OrderStatus>(OrderStatus.pending);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const user = useAppSelector((state: RootState) => state.user.user);
 
-  const [isFilter, setIsFilter] = useState(false);
+  // const [isFilter, setIsFilter] = useState(false);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(orderActions.gets(user._id!))
+      .unwrap()
+      .then(() => setIsLoading(false));
+  }, [dispatch, user]);
 
   const ordersFilter = useMemo(
     () =>
@@ -38,9 +49,10 @@ const Orders = () => {
     [value, orders, searchQuery]
   );
 
-  return (
+  return isLoading ? (
+    <LinearProgress />
+  ) : (
     <Box>
-      {!ordersFilter.length && <LinearProgress />}
       <Box
         position={"fixed"}
         display={"flex"}

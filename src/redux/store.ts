@@ -11,6 +11,7 @@ import orderSlice from "./slices/orderSlice";
 import settingSlice from "./slices/settingSlice";
 import notificationSlice from "./slices/notificationSlice";
 import messageSlice from "./slices/messageSlice";
+import unitSlice from "./slices/unitSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     user: userSlice,
     category: categorySlice,
     tag: tagSlice,
+    unit: unitSlice,
     news: newsSlice,
     voucher: voucherSlice,
     product: productSlice,

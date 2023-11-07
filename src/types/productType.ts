@@ -29,11 +29,13 @@ export interface ProductType {
   averageStarRating?: number;
   category: string;
   tags: Array<TagType>;
-  status?: boolean;
+  unit: string;
+  status: boolean;
   quantity: number;
   currentQuantity?: number;
   brand: string;
   shop: ShopType;
+  views?: number;
   comments?: Array<string>;
   createdAt?: string;
   updatedAt?: string;
@@ -49,17 +51,18 @@ export const InitialProduct: ProductType = {
   title: "",
   description: "",
   price: 0,
+  unit: "",
   lastPrice: 0,
   discount: 0,
   star: {
     count: 0,
   },
+  status: false,
   sold: 0,
   ratings: [],
   averageStarRating: 0,
   category: "",
   tags: [],
-  status: false,
   quantity: 0,
   currentQuantity: 0,
   brand: "",

@@ -11,6 +11,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { authAction } from "../actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { logo } from "../resources/images";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -73,6 +74,11 @@ const Login = () => {
           my: 20,
         }}
       >
+        <img
+          src={logo}
+          alt="logo"
+          style={{ width: 150, marginLeft: "auto", marginRight: "auto" }}
+        />
         <Typography align="center" fontSize={23} fontWeight={600}>
           Đăng nhập quản trị viên
         </Typography>

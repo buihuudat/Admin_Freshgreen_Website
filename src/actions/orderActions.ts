@@ -4,6 +4,7 @@ import { OrderStatus } from "../types/orderType";
 import { NotificationToast } from "../utils/handlers/NotificationToast";
 
 export interface SubmitProps {
+  adminId: string;
   orderId: string;
   userId: string;
   status: OrderStatus.access | OrderStatus.refuse;
@@ -22,9 +23,10 @@ export const orderActions = {
   submitStatusOrder: createAsyncThunk<
     { orderId: string; status: OrderStatus.access; message?: string },
     SubmitProps
-  >("order/status", async ({ userId, orderId, status, message }) => {
+  >("order/status", async ({ adminId, userId, orderId, status, message }) => {
     try {
       const res = await orderApi.statusOrder({
+        adminId,
         userId,
         orderId,
         status:

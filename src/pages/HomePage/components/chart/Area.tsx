@@ -27,7 +27,7 @@ const Area = ({ data, spend }: { data: AreaProps[]; spend: SpendProps }) => {
         data={data}
         index="date"
         categories={["Done", "Access", "Refure"]}
-        colors={["green", "blue", "orange"]}
+        colors={["green", "blue", "red"]}
         valueFormatter={dataFormatter}
       />
     </Card>

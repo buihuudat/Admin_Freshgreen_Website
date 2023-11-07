@@ -36,9 +36,9 @@ export const requestPermissionNotification = (userId: string) => {
   });
 };
 
-export const onListentingMessage = async (dispatch: any) => {
+export const onListentingMessage = async (dispatch: any, userId: string) => {
   await onMessage(messaging, (payload) => {
-    dispatch(orderActions.gets(payload.data?.userId!));
+    dispatch(orderActions.gets(userId));
     NotificationToast({
       type: "default",
       message: payload.notification?.body!,

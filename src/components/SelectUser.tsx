@@ -8,7 +8,7 @@ import {
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
-import { UserType } from "../types/userType";
+import { UserRole, UserType } from "../types/userType";
 import { userActions } from "../actions/userActions";
 
 interface SeletedUserProps {
@@ -18,7 +18,9 @@ interface SeletedUserProps {
 
 const SelectUser = (props: SeletedUserProps) => {
   const dispatch = useAppDispatch();
-  const users = useAppSelector((state: RootState) => state.user.users);
+  const users = useAppSelector((state: RootState) => state.user.users).filter(
+    (user) => user.role !== UserRole.producer
+  );
 
   useEffect(() => {
     dispatch(userActions.getUsers());

@@ -2,7 +2,10 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormControlLabel,
+  FormGroup,
   Modal,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -29,6 +32,9 @@ import ProductEditor from "../../../components/common/Editor";
 import SelectCategory from "../../../components/SelectCategory";
 import SelectTags from "../../../components/SelectTags";
 import SelectShop from "../../../components/SelectShop";
+import SelectUnit from "../../../components/SelectUnit";
+import { UnitType } from "../../../types/unitType";
+import { unitActions } from "../../../actions/unitActions";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -40,7 +46,7 @@ const style = {
   borderRadius: 2,
   p: 4,
   width: "80%",
-  height: 800,
+  height: "100%",
   display: "flex",
   flexDirection: "column",
   overflowY: "auto",
@@ -49,6 +55,7 @@ const style = {
 export interface DataSelect {
   categories: Array<CategoryType>;
   tags: Array<TagType>;
+  units: Array<UnitType>;
 }
 
 const initialError = {
@@ -58,6 +65,7 @@ const initialError = {
   tag: "",
   discount: "",
   price: "",
+  unit: "",
   brand: "",
   quantity: "",
 };
@@ -68,10 +76,33 @@ const ProductModal = () => {
   );
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    setProduct(data || InitialProduct);
+    setShopSelected(data?.shop._id!);
+    setStatus(data?.status!);
+  }, [data]);
+
+  // get data select
+  useEffect(() => {
+    const fetchData = async () => {
+      const [categories, tags, units] = await Promise.all([
+        dispatch(categoryActions.gets()).unwrap(),
+        dispatch(tagActions.gets()).unwrap(),
+        dispatch(unitActions.gets()).unwrap(),
+      ]);
+      if (categories && tags && units) {
+        setDataSelect({
+          categories,
+          tags,
+          units,
+        });
+      }
+    };
+    fetchData();
+  }, [dispatch]);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [product, setProduct] = useState<ProductType>(() =>
-    data ? data : InitialProduct
-  );
+  const [product, setProduct] = useState<ProductType>(data || InitialProduct);
   const [errText, setErrText] = useState(initialError);
   const [description, setDescription] = useState<string>(() =>
     data ? data.description : ""
@@ -79,6 +110,7 @@ const ProductModal = () => {
   const [category, setCategory] = useState<string>(() =>
     data ? data.category : ""
   );
+  const [unit, setUnit] = useState<string>(() => (data ? data.unit : ""));
   const [tagsSelected, setTagsSelected] = useState<string[]>([]);
   const [shopSelected, setShopSelected] = useState<string>(() =>
     data ? (data.shop._id as string) : ""
@@ -87,24 +119,9 @@ const ProductModal = () => {
   const [dataSelect, setDataSelect] = useState<DataSelect>({
     categories: [],
     tags: [],
+    units: [],
   });
-
-  // get data select
-  useEffect(() => {
-    const getData = async () => {
-      const [categories, tags] = await Promise.all([
-        dispatch(categoryActions.gets()).unwrap(),
-        dispatch(tagActions.gets()).unwrap(),
-      ]);
-      if (categories && tags) {
-        setDataSelect({
-          categories,
-          tags,
-        });
-      }
-    };
-    getData();
-  }, [dispatch]);
+  const [status, setStatus] = useState(data ? data.status : true);
 
   // handle close modal
   const handleClose = useCallback(() => {
@@ -128,6 +145,10 @@ const ProductModal = () => {
   const handleTagsSelect = useCallback((e: any) => {
     setTagsSelected(e);
     setTags(e.map((name: string) => ({ name })));
+  }, []);
+
+  const handleSelectUnit = useCallback((e: string) => {
+    setUnit(e);
   }, []);
 
   // handle add images
@@ -170,7 +191,7 @@ const ProductModal = () => {
       const formData = new FormData(e.target);
 
       let newProduct: NewProductType = {
-        images: [],
+        images: product.images,
         title: formData.get("title") as string,
         description,
         price: Number(formData.get("price")),
@@ -178,13 +199,15 @@ const ProductModal = () => {
         brand: formData.get("brand") as string,
         quantity: Number(formData.get("quantity")),
         category: category === "" ? dataSelect.categories[0].name : category,
+        unit,
         tags,
+        status,
         shop: shopSelected,
       };
 
       let err = false;
 
-      if (!product.images.length) {
+      if (!newProduct.images.length) {
         NotificationToast({
           message: "You haven't selected a photo yet",
           type: "error",
@@ -192,7 +215,7 @@ const ProductModal = () => {
         err = true;
       }
 
-      if (newProduct.title.length < 3 || newProduct.title.length > 50) {
+      if (newProduct.title.length < 3 || newProduct.title.length > 100) {
         setErrText((prev) => ({
           ...prev,
           title: "Title must be between 3 and 50 characters long.",
@@ -295,6 +318,8 @@ const ProductModal = () => {
         });
     },
     [
+      status,
+      unit,
       dispatch,
       category,
       description,
@@ -302,6 +327,152 @@ const ProductModal = () => {
       tags,
       dataSelect.categories,
       product,
+    ]
+  );
+  const handleUpdateProduct = useCallback(
+    async (e: ChangeEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+
+      let newProduct: NewProductType = {
+        images: data?.images!,
+        title: (formData.get("title") as string) || data?.title!,
+        description: description || data?.description!,
+        price: Number(formData.get("price")) || data?.lastPrice!,
+        discount: Number(formData.get("discount")) || data?.discount!,
+        brand: (formData.get("brand") as string) || data?.brand!,
+        quantity: Number(formData.get("quantity")) || data?.quantity!,
+        category: category === "" ? data?.category! : category,
+        unit: unit || data?.unit!,
+        tags: tags.length ? tags : data?.tags!,
+        status,
+        shop: shopSelected || data?.shop._id!,
+      };
+
+      let err = false;
+
+      if (!newProduct.images.length) {
+        NotificationToast({
+          message: "You haven't selected a photo yet",
+          type: "error",
+        });
+        err = true;
+      }
+
+      if (newProduct.title.length < 3 || newProduct.title.length > 100) {
+        setErrText((prev) => ({
+          ...prev,
+          title: "Title must be between 3 and 50 characters long.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.brand.length < 3 || newProduct.brand.length > 50) {
+        setErrText((prev) => ({
+          ...prev,
+          brand: "Brand must be between 3 and 50 characters long.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.description.length < 100) {
+        NotificationToast({
+          message: "Desciption must be at 100 characters.",
+          type: "error",
+        });
+        err = true;
+      }
+
+      if (newProduct.price < 0) {
+        setErrText((prev) => ({
+          ...prev,
+          price: "Invalid price.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.discount < 0 || newProduct.discount > 100) {
+        setErrText((prev) => ({
+          ...prev,
+          disccoun: "Invalid price.",
+        }));
+        err = true;
+      }
+
+      if (newProduct.quantity < 0) {
+        setErrText((prev) => ({
+          ...prev,
+          quantity: "Invalid quantity.",
+        }));
+        err = true;
+      }
+
+      if (!newProduct.tags.length) {
+        setErrText((prev) => ({
+          ...prev,
+          tag: "You haven't selected a tag yet.",
+        }));
+        err = true;
+      }
+
+      if (err) return;
+      setErrText(initialError);
+      setIsLoading(true);
+
+      newProduct = {
+        ...newProduct,
+        _id: data?._id!,
+        images: product.images.length
+          ? await Promise.all(product.images.map((image) => imageUpload(image)))
+          : data?.images!,
+      };
+
+      await dispatch(productActions.update(newProduct))
+        .unwrap()
+        .then(() => {
+          setErrText(initialError);
+          setProduct(InitialProduct);
+          setTags([]);
+          setShopSelected("");
+          setCategory("");
+          setDescription("");
+          setTagsSelected([]);
+          setIsLoading(false);
+          dispatch(setProductModal({ open: false }));
+        })
+        .catch((err: any) => {
+          err?.errors &&
+            err.errors.forEach((e: any) => {
+              switch (e.path) {
+                case "title":
+                  setErrText((prev) => ({
+                    ...prev,
+                    title: e.msg,
+                  }));
+                  break;
+                case "description":
+                  NotificationToast({ message: e.msg, type: "error" });
+                  break;
+                default:
+                  break;
+              }
+            });
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    },
+    [
+      category,
+      data,
+      description,
+      dispatch,
+      product.images,
+      shopSelected,
+      status,
+      tags,
+      unit,
     ]
   );
 
@@ -312,7 +483,11 @@ const ProductModal = () => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style} component={"form"} onSubmit={handleCreateProduct}>
+      <Box
+        sx={style}
+        component={"form"}
+        onSubmit={data ? handleUpdateProduct : handleCreateProduct}
+      >
         <Typography align="center" fontWeight={600} fontSize={32} m={2}>
           {data ? "Update" : "Create"} product
         </Typography>
@@ -434,6 +609,13 @@ const ProductModal = () => {
               error={errText.quantity !== ""}
               helperText={errText.quantity}
             />
+            <FormControlLabel
+              control={
+                status ? <Switch checked={true} /> : <Switch checked={false} />
+              }
+              label={status ? "Active" : "No active"}
+              onChange={() => setStatus(!status)}
+            />
           </Box>
           <Box
             sx={{
@@ -444,6 +626,16 @@ const ProductModal = () => {
               justifyContent: "center",
             }}
           >
+            {!dataSelect.categories.length ? (
+              <CircularProgress />
+            ) : (
+              <SelectUnit
+                data={dataSelect.units}
+                errText={errText.unit}
+                onChange={handleSelectUnit}
+                value={data?.unit ?? unit}
+              />
+            )}
             {!dataSelect.categories.length ? (
               <CircularProgress />
             ) : (

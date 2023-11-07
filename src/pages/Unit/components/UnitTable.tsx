@@ -4,19 +4,19 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { LoadingButton } from "@mui/lab";
 import Search from "../../../components/common/Search";
-import { CategoryType } from "../../../types/categoryType";
+import { UnitActionsType } from "../../../actions/unitActions";
 
-interface AactionButtonProps {
-  category: CategoryType;
-  onDelete: (category: CategoryType) => void;
+interface ActionButtonProps {
+  unit: UnitActionsType;
+  onDelete: (category: UnitActionsType) => void;
   isPending: boolean;
 }
-const ActionButton = (props: AactionButtonProps) => {
+const ActionButton = (props: ActionButtonProps) => {
   return (
     <Box>
       <LoadingButton
         loading={props.isPending}
-        onClick={() => props.onDelete(props.category)}
+        onClick={() => props.onDelete(props.unit)}
       >
         <DeleteIcon color="error" />
       </LoadingButton>
@@ -24,35 +24,24 @@ const ActionButton = (props: AactionButtonProps) => {
   );
 };
 
-interface CategoryTableProps {
-  categories: CategoryType[];
-  onDelete: (category: CategoryType) => void;
+interface TagTableProps {
+  tags: UnitActionsType[];
+  onDelete: (category: UnitActionsType) => void;
   isPending: boolean;
 }
 
-export default function CategoryTable(props: CategoryTableProps) {
+export default function UnitTable(props: TagTableProps) {
   const columns: GridColDef[] = [
-    { field: "_id", headerName: "ID", width: 200 },
-    {
-      field: "image",
-      headerName: "Image",
-      width: 100,
-      renderCell: (params: GridRenderCellParams) => (
-        <img
-          src={params.row.image}
-          style={{ width: 50, height: 50, objectFit: "cover" }}
-        />
-      ),
-    },
+    { field: "_id", headerName: "ID", width: 250 },
     { field: "name", headerName: "Name", width: 100 },
     { field: "createdAt", headerName: "Created Date", width: 220 },
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      width: 200,
       renderCell: (params: GridRenderCellParams) => (
         <ActionButton
-          category={params.row}
+          unit={params.row}
           onDelete={props.onDelete}
           isPending={props.isPending}
         />
@@ -60,22 +49,22 @@ export default function CategoryTable(props: CategoryTableProps) {
     },
   ];
   const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const [dataReSearch, setDataReSearch] = React.useState<CategoryType[]>([]);
+  const [dataReSearch, setDataReSearch] = React.useState<UnitActionsType[]>([]);
   const [isPending, startTransition] = React.useTransition();
 
   React.useEffect(() => {
     startTransition(() => {
-      const filteredCategories = props.categories.filter((category) =>
-        category.name?.toLowerCase().includes(searchQuery.toLowerCase())
+      const filteredTags = props.tags.filter((tag) =>
+        tag.name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setDataReSearch(filteredCategories);
+      setDataReSearch(filteredTags);
     });
-  }, [searchQuery, props.categories]);
+  }, [searchQuery, props.tags]);
 
   return (
     <Box display={"flex"} flexDirection={"column"} gap={5}>
       <Typography align="center" fontWeight={600} fontSize={25}>
-        Lists of categories
+        Lists of Units
       </Typography>
       <Box display={"flex"}>
         <Search
@@ -83,11 +72,11 @@ export default function CategoryTable(props: CategoryTableProps) {
           setSearchQuery={setSearchQuery}
           placeholder="name"
         />
-        {isPending && <CircularProgress size={20} color={"success"} />}
+        {isPending && <CircularProgress size={20} />}
       </Box>
       <Box>
         <Typography fontWeight={600}>
-          Có tổng cộng {dataReSearch.length} thể loại
+          Có tổng cộng {dataReSearch.length} thẻ
         </Typography>
         <DataGrid
           getRowId={(category) => category._id}

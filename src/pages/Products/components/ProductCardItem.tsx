@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback } from "react";
 import { ProductType } from "../../../types/productType";
 import {
   Avatar,
@@ -13,17 +13,16 @@ import {
 } from "@mui/material";
 import { formatDateInput } from "../../../utils/handlers/formatDateInput";
 import { formattedAmount } from "../../../utils/handlers/formatMoney";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAppDispatch } from "../../../redux/hooks";
 import { productActions } from "../../../actions/productActions";
 import EditIcon from "@mui/icons-material/Edit";
 import { setProductModal } from "../../../redux/slices/productSlice";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
-const ProductItem = memo(({ product }: { product: ProductType }) => {
+const ProductCartItem = memo(({ product }: { product: ProductType }) => {
   const dispatch = useAppDispatch();
-
-  const handleView = () => {};
 
   const handleEdit = useCallback(() => {
     dispatch(setProductModal({ open: true, data: product }));
@@ -35,7 +34,7 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
 
   return (
     <Box>
-      <Card sx={{ width: 300, height: 500 }}>
+      <Card sx={{ width: 300, height: 600 }}>
         {/* shop info */}
         <CardActionArea
           sx={{
@@ -53,6 +52,9 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
           />
           <Typography>{product.shop.name || "Anonymous"}</Typography>
         </CardActionArea>
+        <Typography align="center" fontSize={"13"} fontStyle={"italic"}>
+          {formatDateInput(product.createdAt)}
+        </Typography>
         <CardContent
           sx={{
             display: "flex",
@@ -61,16 +63,13 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
             alignItems: "center",
           }}
         >
-          <Typography fontSize={"13"} fontStyle={"italic"}>
-            {formatDateInput(product.createdAt)}
-          </Typography>
           <Typography
             fontSize={"13"}
             fontStyle={"italic"}
             fontWeight={600}
             color={"red"}
           >
-            count:{product.currentQuantity}
+            quantity:{product.currentQuantity}
           </Typography>
           <Typography
             fontSize={"13"}
@@ -80,6 +79,14 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
           >
             sold:{product.sold}
           </Typography>
+          <Typography
+            fontSize={"13"}
+            fontStyle={"italic"}
+            fontWeight={600}
+            color={"red"}
+          >
+            view:{product.views}
+          </Typography>
         </CardContent>
         <CardMedia
           component={"img"}
@@ -87,14 +94,17 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
           sx={{ objectFit: "cover", height: 200 }}
         />
         <CardContent>
+          <Typography fontSize={10} color={"#999"}>
+            {product.category}
+          </Typography>
           <Typography
             align="center"
             fontSize={23}
             fontWeight={600}
             textTransform={"capitalize"}
           >
-            {product.title.length > 20
-              ? product.title.slice(0, 20) + "..."
+            {product.title.length > 35
+              ? product.title.slice(0, 35) + "..."
               : product.title}
           </Typography>
 
@@ -120,7 +130,7 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
             alignItems={"center"}
           >
             <Typography fontSize={25} fontWeight={600} color={"green"}>
-              {formattedAmount(product.lastPrice ?? 0)}
+              {formattedAmount(product.lastPrice ?? 0)}/{product.unit}
             </Typography>
             <Typography fontSize={22} fontWeight={600} color={"orange"}>
               {product.discount}%
@@ -141,8 +151,8 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
           <IconButton color="warning" onClick={handleEdit}>
             <EditIcon />
           </IconButton>
-          <IconButton color="primary" onClick={handleView}>
-            <VisibilityIcon />
+          <IconButton color="primary">
+            {product.status ? <VisibilityIcon /> : <VisibilityOffIcon />}
           </IconButton>
         </CardActions>
       </Card>
@@ -150,4 +160,4 @@ const ProductItem = memo(({ product }: { product: ProductType }) => {
   );
 });
 
-export default ProductItem;
+export default ProductCartItem;

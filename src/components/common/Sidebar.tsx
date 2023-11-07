@@ -22,7 +22,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import CategoryIcon from "@mui/icons-material/Category";
 import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
+import AcUnitIcon from "@mui/icons-material/AcUnit";
 import TagIcon from "@mui/icons-material/Tag";
 import { mainColor } from "../../resources/color";
 import { Avatar, Button, Card, Typography } from "@mui/material";
@@ -144,6 +144,13 @@ const sidebarHandleData = [
     icon: <TagIcon />,
     text: "Tags",
     path: "/tags",
+    badge: 0,
+    active: true,
+  },
+  {
+    icon: <AcUnitIcon />,
+    text: "Unit",
+    path: "/unit",
     badge: 0,
     active: true,
   },

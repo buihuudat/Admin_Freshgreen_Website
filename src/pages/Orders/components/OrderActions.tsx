@@ -3,8 +3,9 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { OrderItemType, OrderStatus } from "../../../types/orderType";
 import { memo, useState } from "react";
 import { UserType } from "../../../types/userType";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { orderActions } from "../../../actions/orderActions";
+import { RootState } from "../../../redux/store";
 
 interface Props {
   order: OrderItemType;
@@ -13,6 +14,8 @@ interface Props {
 const OrderActions = memo((props: Props) => {
   const { order, user } = props;
   const dispatch = useAppDispatch();
+
+  const admin = useAppSelector((state: RootState) => state.user.user);
 
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState<string>("");
@@ -23,6 +26,7 @@ const OrderActions = memo((props: Props) => {
     setIsLoading(true);
     dispatch(
       orderActions.submitStatusOrder({
+        adminId: admin._id!,
         userId: user._id as string,
         orderId: order._id as string,
         status: OrderStatus.access,
@@ -40,6 +44,7 @@ const OrderActions = memo((props: Props) => {
     }
     dispatch(
       orderActions.submitStatusOrder({
+        adminId: admin._id!,
         userId: user._id as string,
         orderId: order._id as string,
         status: OrderStatus.refuse,
@@ -106,6 +111,12 @@ const OrderActions = memo((props: Props) => {
     <Button variant="text" fullWidth color="success" disabled>
       Đang giao hàng
     </Button>
+  ) : order.status === OrderStatus.done ? (
+    <Box p={1}>
+      <Button variant="text" fullWidth color="error" disabled>
+        Đã hoàn thành
+      </Button>
+    </Box>
   ) : (
     <Box p={1}>
       <Button variant="text" fullWidth color="error" disabled>

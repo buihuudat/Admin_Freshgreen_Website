@@ -9,7 +9,7 @@ const valueFormatter = (number: number) => `Số lượng ${number.toString()}`;
 
 const PieChart = ({ data }: { data: PieProps[] }) => (
   <Card className="max-w-lg">
-    <Title>Số lượng sản phẩm bán trong ngày</Title>
+    <Title>Tổng số lượng sản phẩm đã bán</Title>
     <DonutChart
       className="mt-6"
       data={data}

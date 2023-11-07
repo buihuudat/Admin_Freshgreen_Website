@@ -4,8 +4,8 @@ import { getToken } from "../handlers/tokenHandler";
 import { NotificationToast } from "../handlers/NotificationToast";
 
 export const host = "http://localhost:5000";
-const baseURL = `${host}/api/v1`;
-// export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
+// const baseURL = `${host}/api/v1`;
+export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
 export const clientURL = "https://web-ecommerce-bhd.vercel.app";
 
 const axiosClient = axios.create({
