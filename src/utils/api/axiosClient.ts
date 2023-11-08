@@ -6,7 +6,7 @@ import { NotificationToast } from "../handlers/NotificationToast";
 export const host = "http://localhost:5000";
 // const baseURL = `${host}/api/v1`;
 export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
-export const clientURL = "https://web-ecommerce-bhd.vercel.app";
+export const clientURL = "https://freshgreen.io.vn";
 
 const axiosClient = axios.create({
   baseURL,

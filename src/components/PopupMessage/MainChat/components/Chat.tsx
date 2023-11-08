@@ -3,34 +3,54 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { RootState } from "../../../../redux/store";
 import { LoadingButton } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { messageActions } from "../../../../actions/messageAction";
 import MessageItem from "./MessageItem";
+import { fullnameOfUser } from "../../../../types/userType";
+import { NotificationToast } from "../../../../utils/handlers/NotificationToast";
 
 const Chat = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const user = useAppSelector((state: RootState) => state.user.user);
-  const { user: data, userChat } = useAppSelector(
-    (state: RootState) => state.messages
-  );
+  const {
+    message: data,
+    userChat,
+    loading,
+  } = useAppSelector((state: RootState) => state.messages);
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    const chatContainer = messagesEndRef.current;
+    if (chatContainer) {
+      const isUserAtBottom =
+        chatContainer.scrollHeight - chatContainer.clientHeight <=
+        chatContainer.scrollTop + 1;
+
+      if (isUserAtBottom) {
+        chatContainer.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [userChat]);
+
   const handleSend = () => {
+    if (user.username !== "dat54261001")
+      return NotificationToast({
+        message: "access denied",
+        type: "error",
+      });
     setMessage("");
-    data.user._id === "AI "
-      ? dispatch(messageActions.ask({ userId: user?._id!, message }))
-      : dispatch(
-          messageActions.send({
-            from: user?._id!,
-            to: data.user._id,
-            message: {
-              text: message,
-            },
-          })
-        );
+    dispatch(
+      messageActions.send({
+        from: user?._id!,
+        to: data?.userId!,
+        message: {
+          text: message,
+        },
+      })
+    );
   };
 
   return (
@@ -43,17 +63,26 @@ const Chat = () => {
           gap={1}
         >
           <Typography>to: </Typography>
-          <Typography fontWeight={600}>{data.user.name}</Typography>
+          {data?.fullname && (
+            <Typography fontWeight={600}>
+              {fullnameOfUser(data?.fullname!)}
+            </Typography>
+          )}
         </Box>
         <Divider variant="middle" />
       </Box>
 
-      <Box sx={{ flex: 1, padding: 3 }}>
+      <Box sx={{ flex: 1, padding: 3, height: 100, overflow: "auto" }}>
         {userChat.map((chat, index) => (
-          <Box key={index}>
-            <MessageItem {...chat} reveicer={data.user} user={user!} />
-          </Box>
+          <MessageItem
+            key={index}
+            {...chat}
+            fromSelf={chat.fromSelf}
+            reveicer={data!}
+            user={user!}
+          />
         ))}
+        <div ref={messagesEndRef} />
       </Box>
 
       <Box sx={{ mt: "auto", width: "100%", display: "flex" }}>
@@ -64,7 +93,7 @@ const Chat = () => {
           label="Đặt câu hỏi..."
           variant="filled"
         />
-        <LoadingButton onClick={handleSend} loading={isLoading}>
+        <LoadingButton onClick={handleSend} loading={loading}>
           <SendIcon />
         </LoadingButton>
       </Box>

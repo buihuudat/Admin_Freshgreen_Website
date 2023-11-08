@@ -15,6 +15,7 @@ import {
 } from "../../utils/handlers/getFCMToken";
 import PopupMessage from "../PopupMessage";
 import { RootState } from "../../redux/store";
+import { messageActions } from "../../actions/messageAction";
 
 const AdminLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,8 +35,14 @@ const AdminLayout = () => {
         dispatch(setUserReducer(isAuth));
         dispatch(settingsActions.getSetting(isAuth._id!));
         dispatch(orderActions.gets(isAuth._id!));
-        socket.emit("admin-connect", { username: isAuth.username });
+        dispatch(messageActions.gets(isAuth._id!));
         requestPermissionNotification(isAuth._id!);
+
+        socket.emit("admin-connect", {
+          username: isAuth.username,
+          id: isAuth._id,
+        });
+        socket.on("message-recieve", (data) => {});
       } else {
         NotificationToast({
           message: "You are not Administractor",

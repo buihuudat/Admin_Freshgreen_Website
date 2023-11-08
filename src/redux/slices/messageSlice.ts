@@ -5,6 +5,7 @@ import {
   PendingAction,
   RejectedAction,
 } from "../../types/silceType";
+import { MessageItemType } from "../../types/messageType";
 
 interface SendProps {
   authId: string;
@@ -13,37 +14,30 @@ interface SendProps {
 
 interface InitialProp {
   popup: boolean;
-  user: any;
+  message: MessageItemType | null;
   aiChat: {
     from: Array<SendProps>;
     to: Array<SendProps>;
   };
   userChat: Array<{
-    fromSeft: boolean;
+    fromSelf: boolean;
     message: string;
   }>;
   loading: boolean;
+  messages: Array<MessageItemType>;
 }
 
 const initialState: InitialProp = {
   popup: false,
-  user: {
-    user: {
-      _id: "",
-      name: "",
-      avatar: "",
-    },
-    lastMessage: "",
-    time: "",
-    seen: false,
-  },
-
+  message: null,
   aiChat: {
     from: [],
     to: [],
   },
 
   userChat: [],
+
+  messages: [],
 
   loading: false,
 };
@@ -53,7 +47,7 @@ export const messageSlice = createSlice({
   initialState,
   reducers: {
     selectUser: (state, action) => {
-      state.user = action.payload;
+      state.message = action.payload;
     },
     setPopup: (state, action) => {
       state.popup = action.payload;
@@ -80,8 +74,14 @@ export const messageSlice = createSlice({
           to: updatedChatTo,
         };
       })
+      .addCase(messageActions.send.fulfilled, (state, action) => {
+        state.userChat.push(action.payload);
+      })
       .addCase(messageActions.get.fulfilled, (state, action) => {
         state.userChat = action.payload;
+      })
+      .addCase(messageActions.gets.fulfilled, (state, action) => {
+        state.messages = action.payload;
       })
       .addMatcher<PendingAction>(
         (action) => action.type.endsWith("/pending"),
@@ -91,7 +91,7 @@ export const messageSlice = createSlice({
       )
       .addMatcher<FulfilledAction | RejectedAction>(
         (action) =>
-          action.type.endsWith("/fulfiled") ||
+          action.type.endsWith("/fulfilled") ||
           action.type.endsWith("/rejected"),
         (state) => {
           state.loading = false;

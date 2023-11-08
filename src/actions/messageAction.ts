@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { messageApi } from "../utils/api/messageApi";
 import { socket } from "../utils/socketConfirm";
-import { SendType } from "../types/messageType copy";
+import { SendType } from "../types/messageType";
 
 export const messageActions = {
   ask: createAsyncThunk<any, { message: string; userId: string }>(
@@ -35,4 +35,12 @@ export const messageActions = {
       }
     }
   ),
+  gets: createAsyncThunk("message/gets", async (id: string) => {
+    try {
+      const res = await messageApi.gets(id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }),
 };
