@@ -4,9 +4,8 @@ import { getToken } from "../handlers/tokenHandler";
 import { NotificationToast } from "../handlers/NotificationToast";
 
 // export const host = "http://localhost:5000";
-export const host = "http://52.221.193.19";
-const baseURL = `${host}/api/v1`;
-// export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
+// const baseURL = `${host}/api/v1`;
+export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
 export const clientURL = "https://freshgreen.io.vn";
 
 const axiosClient = axios.create({
