@@ -6,10 +6,12 @@ import {
   RejectedAction,
 } from "../../types/silceType";
 import { SettingsType } from "../../types/settingsType";
+import { EmailPortType } from "../../utils/api/settingApi";
 
 interface InitialProps {
   settings: SettingsType;
   loading: boolean;
+  emailPort: EmailPortType;
 }
 
 const initialState: InitialProps = {
@@ -17,6 +19,10 @@ const initialState: InitialProps = {
     banners: {
       images: [],
     },
+  },
+  emailPort: {
+    email: "",
+    password: "",
   },
   loading: false,
 };
@@ -34,6 +40,9 @@ const settingSlice = createSlice({
       .addCase(settingsActions.updateSetting.fulfilled, (state, action) => {
         state.settings._id = action.payload._id;
         state.settings.banners = action.payload.banners;
+      })
+      .addCase(settingsActions.emailPortAction.fulfilled, (state, action) => {
+        state.emailPort = action.payload;
       })
       .addMatcher<PendingAction>(
         (action) => action.type.endsWith("pending"),

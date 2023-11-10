@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { settingApi } from "../utils/api/settingApi";
+import { EmailPortType, settingApi } from "../utils/api/settingApi";
 
 export interface SettingActionsProp {
   _id: string;
@@ -22,6 +22,18 @@ export const settingsActions = {
     async (data: SettingActionsProp) => {
       try {
         const res = await settingApi.update(data);
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    }
+  ),
+
+  emailPortAction: createAsyncThunk(
+    "settings/email-port",
+    async (data: EmailPortType) => {
+      try {
+        const res = await settingApi.mailPort(data);
         return res.data;
       } catch (error) {
         throw error;
