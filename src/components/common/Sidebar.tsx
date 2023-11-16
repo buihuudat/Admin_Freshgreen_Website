@@ -29,6 +29,7 @@ import { Avatar, Button, Card, Typography } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { authAction } from "../../actions/authActions";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import { RootState } from "../../redux/store";
 const drawerWidth = 200;
 
@@ -158,6 +159,13 @@ const sidebarHandleData = [
     icon: <NotificationsIcon />,
     text: "Notifications",
     path: "/notifications",
+    badge: 0,
+    active: true,
+  },
+  {
+    icon: <DeliveryDiningIcon />,
+    text: "Delivery",
+    path: "/delivery",
     badge: 0,
     active: true,
   },

@@ -16,4 +16,7 @@ export const settingApi = {
 
   mailPort: (data: EmailPortType) =>
     axiosClient.post("/settings/mailport", data),
+
+  tokenGPT: (token: string) =>
+    axiosClient.post("/settings/token-gpt", { token }),
 };

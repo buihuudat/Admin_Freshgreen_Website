@@ -11,10 +11,8 @@ const Unit = () => {
   const [tagErrText, settagErrText] = useState<string>("");
   const [isPending, setIsPending] = useState(false);
 
-  const loading = useAppSelector((state) => state.tag.isLoading);
+  const loading = useAppSelector((state: RootState) => state.tag.isLoading);
   const units = useAppSelector((state: RootState) => state.unit.units);
-
-  console.log(units);
 
   const dispatch = useAppDispatch();
 

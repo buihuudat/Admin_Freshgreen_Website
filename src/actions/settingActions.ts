@@ -40,4 +40,13 @@ export const settingsActions = {
       }
     }
   ),
+
+  tokenGPT: createAsyncThunk("settings/tokenGPT", async (token: string) => {
+    try {
+      const res = await settingApi.tokenGPT(token);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }),
 };

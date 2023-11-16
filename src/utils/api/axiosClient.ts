@@ -3,11 +3,11 @@ import queryString from "query-string";
 import { getToken } from "../handlers/tokenHandler";
 import { NotificationToast } from "../handlers/NotificationToast";
 
-export const host = "https://freshgreen.io.vn";
-// const baseURL = `${host}/api/v1`;
-// export const baseURL = "https://ecommerce-bhd.onrender.com/api/v1";
-const baseURL = "https://server.freshgreen.io.vn/api/v1";
-export const clientURL = "https://freshgreen.io.vn";
+export const host = "https://server.freshgreen.io.vn";
+// export const host = "http://localhost:5000";
+const baseURL = `${host}/api/v1`;
+// const baseURL = "https://server.freshgreen.io.vn/api/v1";
+export const clientURL = "https://freshgreen.vervel.app";
 
 const axiosClient = axios.create({
   baseURL,

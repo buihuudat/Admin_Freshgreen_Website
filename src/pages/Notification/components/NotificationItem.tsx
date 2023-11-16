@@ -5,11 +5,18 @@ import { mainColor } from "../../../resources/color";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch } from "../../../redux/hooks";
 import { notificationsActions } from "../../../actions/notificationsActions";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 
 export default function NotificationItem(notification: NotificationType) {
-  const avatar =
-    typeof notification.auth !== "string" ? notification.auth.avatar! : "";
+  const avatar = () => {
+    if (typeof notification.auth === "string" || !notification.auth) return "";
+
+    if (notification.auth.avatar) {
+      return notification.auth.avatar;
+    }
+
+    return "";
+  };
 
   const dispatch = useAppDispatch();
   const [checked, setChecked] = useState(notification.status);
@@ -42,7 +49,7 @@ export default function NotificationItem(notification: NotificationType) {
             width: 300,
           }}
         >
-          <Avatar src={avatar} />
+          <Avatar src={avatar()} alt="avatar" />
           <Box>
             <Typography fontWeight={600} fontSize={18}>
               {notification.title}

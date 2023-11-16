@@ -1,19 +1,35 @@
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import HomeSwiper from "./components/HomeSwiper";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import Banner from "./components/Banner";
 import EmailForm from "./components/EmailForm";
+import { useEffect, useState } from "react";
+import { settingsActions } from "../../actions/settingActions";
+import TokenForm from "./components/TokenForm";
 
 export default function Settings() {
-  const { settings } = useAppSelector((state: RootState) => state.settings);
+  const data = useAppSelector((state: RootState) => state.settings);
   const user = useAppSelector((state: RootState) => state.user.user);
-  return (
+  const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(settingsActions.getSetting(user._id!)).then(() =>
+      setIsLoading(false)
+    );
+  }, [dispatch, user._id]);
+
+  return isLoading ? (
+    <LinearProgress />
+  ) : (
     <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
-      <HomeSwiper settings={settings} user={user} />
+      <HomeSwiper settings={data.settings} user={user} />
       <Banner />
 
-      <EmailForm />
+      <EmailForm {...data.settings.emailSendPort} />
+
+      <TokenForm tokenGPT={data.settings.tokenGPT} />
     </Box>
   );
 }
