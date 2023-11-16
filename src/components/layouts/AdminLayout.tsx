@@ -24,6 +24,7 @@ const AdminLayout = () => {
 
   const user = useAppSelector((state: RootState) => state.user.user);
   user && onListentingMessage(dispatch, user._id!);
+  socket.on("message-recieve", (data) => {});
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -42,7 +43,6 @@ const AdminLayout = () => {
           username: isAuth.username,
           id: isAuth._id,
         });
-        socket.on("message-recieve", (data) => {});
       } else {
         NotificationToast({
           message: "You are not Administractor",

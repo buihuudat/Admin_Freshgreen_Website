@@ -8,6 +8,7 @@ export const host = "https://server.freshgreen.io.vn";
 const baseURL = `${host}/api/v1`;
 // const baseURL = "https://server.freshgreen.io.vn/api/v1";
 export const clientURL = "https://freshgreen.vervel.app";
+// export const clientURL = "http://localhost:9999";
 
 const axiosClient = axios.create({
   baseURL,
