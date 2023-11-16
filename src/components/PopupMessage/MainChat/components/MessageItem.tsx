@@ -42,8 +42,8 @@ const MessageItem = (props: Props) => {
           >
             <Typography fontSize={18} fontWeight={600}>
               {fromSelf
-                ? fullnameOfUser(user.fullname)
-                : fullnameOfUser(reveicer.fullname)}
+                ? fullnameOfUser(user?.fullname)
+                : fullnameOfUser(reveicer?.fullname)}
             </Typography>
             <Typography textAlign={"justify"}>{message}</Typography>
           </Box>
