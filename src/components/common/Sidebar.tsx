@@ -235,7 +235,7 @@ export default function Sidebar() {
   );
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <Typography fontWeight={600} fontSize={23} color={mainColor}>
@@ -279,7 +279,7 @@ export default function Sidebar() {
           ))}
         </List>
         <Divider />
-        <List>
+        <List sx={{ overflow: "auto" }}>
           {sidebarHandleData.map((data, index) => (
             <ListItem key={index} disablePadding sx={{ display: "block" }}>
               <ListItemButton

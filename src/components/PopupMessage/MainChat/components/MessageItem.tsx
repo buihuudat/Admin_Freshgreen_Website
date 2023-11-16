@@ -30,7 +30,7 @@ const MessageItem = (props: Props) => {
           }}
         >
           <Avatar
-            src={fromSelf ? user.avatar : reveicer.avatar}
+            src={fromSelf ? user?.avatar : reveicer?.avatar}
             alt={"avatar"}
           />
           <Box
