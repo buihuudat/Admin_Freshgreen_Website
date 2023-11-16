@@ -44,7 +44,7 @@ const ListItem = (data: MessageItemType) => {
           pr: 2,
         }}
       >
-        <Avatar src={data.avatar} />
+        <Avatar src={data.avatar} alt="avatar" />
         <Box width={"100%"}>
           <Box
             width={"100%"}
