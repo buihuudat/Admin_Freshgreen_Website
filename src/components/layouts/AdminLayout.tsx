@@ -55,8 +55,14 @@ const AdminLayout = () => {
   }, [navigate, dispatch]);
 
   socket.on("message-recieve", (data) => {
-    dispatch(setPopup(!popup));
-    dispatch(selectUser(data));
+    dispatch(setPopup(true));
+    dispatch(
+      selectUser({
+        fullname: data.fullname,
+        avatar: data.avatar,
+        userId: data.userId,
+      })
+    );
   });
 
   return isLoading ? (
