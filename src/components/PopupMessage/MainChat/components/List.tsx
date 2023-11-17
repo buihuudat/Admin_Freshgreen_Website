@@ -26,8 +26,8 @@ const ListItem = (data: MessageItemType) => {
       user &&
         dispatch(
           messageActions.get({
-            from: data.from,
-            to: data.to,
+            from: data.to,
+            to: data.from,
           })
         );
     });
