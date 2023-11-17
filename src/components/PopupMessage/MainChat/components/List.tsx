@@ -1,7 +1,7 @@
 import { Avatar, Box, Divider, Typography } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import { selectUser } from "../../../../redux/slices/messageSlice";
+import { selectUser, setPopup } from "../../../../redux/slices/messageSlice";
 import { mainColor } from "../../../../resources/color";
 import { RootState } from "../../../../redux/store";
 import { MessageItemType } from "../../../../types/messageType";
@@ -22,15 +22,23 @@ const ListItem = (data: MessageItemType) => {
   };
 
   useEffect(() => {
-    socket.on("message-recieve", (data) => {
-      user &&
+    user &&
+      socket.on("message-recieve", (data) => {
         dispatch(
           messageActions.get({
-            from: data.from,
-            to: data.to,
+            from: user._id!,
+            to: user._id! !== data.from ? data.to : data.from,
           })
         );
-    });
+        dispatch(setPopup(true));
+        dispatch(
+          selectUser({
+            userId: data.userId,
+            fullname: data.fullname,
+            avatar: data.avatar,
+          })
+        );
+      });
   }, [dispatch, user]);
 
   return (

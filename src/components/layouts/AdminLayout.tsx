@@ -16,7 +16,6 @@ import {
 import PopupMessage from "../PopupMessage";
 import { RootState } from "../../redux/store";
 import { messageActions } from "../../actions/messageAction";
-import { selectUser, setPopup } from "../../redux/slices/messageSlice";
 
 const AdminLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +23,6 @@ const AdminLayout = () => {
   const dispatch = useAppDispatch();
 
   const user = useAppSelector((state: RootState) => state.user.user);
-  const popup = useAppSelector((state: RootState) => state.messages.popup);
   user && onListentingMessage(dispatch, user._id!);
 
   useEffect(() => {
@@ -53,17 +51,6 @@ const AdminLayout = () => {
     };
     checkAuth();
   }, [navigate, dispatch]);
-
-  socket.on("message-recieve", (data) => {
-    dispatch(setPopup(true));
-    dispatch(
-      selectUser({
-        fullname: data.fullname,
-        avatar: data.avatar,
-        userId: data.userId,
-      })
-    );
-  });
 
   return isLoading ? (
     <LinearProgress />
