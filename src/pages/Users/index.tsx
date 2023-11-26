@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { ActionButton } from "./components/ActionButton";
 import moment from "moment";
-import { UserType } from "../../types/userType";
+import { UserRole, UserType } from "../../types/userType";
 
 export default function Users() {
   const columns: GridColDef[] = [
@@ -73,6 +73,13 @@ export default function Users() {
     getUsers();
   }, [isDeleteLoading, dispatch]);
 
+  const adminList = React.useMemo(() => {
+    return users.filter(
+      (user) =>
+        user.role === UserRole.admin || user.role === UserRole.superadmin
+    );
+  }, [users]);
+
   // search result
   React.useEffect(() => {
     startTransition(() => {
@@ -126,6 +133,24 @@ export default function Users() {
             getRowId={(user) => user._id}
             sortModel={[{ field: "createdAt", sort: "desc" }]}
             rows={dataReSearch}
+            columns={columns}
+            rowSelection={false}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+          />
+        </Box>
+        <Box>
+          <Typography fontWeight={600}>
+            Có {adminList.length} Quản trị viên
+          </Typography>
+          <DataGrid
+            sortModel={[{ field: "createdAt", sort: "desc" }]}
+            getRowId={(user) => user._id}
+            rows={adminList}
             columns={columns}
             rowSelection={false}
             initialState={{

@@ -6,7 +6,6 @@ import { NotificationToast } from "../handlers/NotificationToast";
 export const host = "https://server.freshgreen.io.vn";
 // export const host = "http://localhost:5000";
 const baseURL = `${host}/api/v1`;
-// const baseURL = "https://server.freshgreen.io.vn/api/v1";
 export const clientURL = "https://freshgreen.vervel.app";
 // export const clientURL = "http://localhost:9999";
 
