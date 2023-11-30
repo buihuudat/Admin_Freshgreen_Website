@@ -6,6 +6,7 @@ import { UserType } from "../../../types/userType";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { orderActions } from "../../../actions/orderActions";
 import { RootState } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   order: OrderItemType;
@@ -14,6 +15,7 @@ interface Props {
 const OrderActions = memo((props: Props) => {
   const { order, user } = props;
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const admin = useAppSelector((state: RootState) => state.user.user);
 
@@ -55,8 +57,20 @@ const OrderActions = memo((props: Props) => {
     setShow(false);
   };
 
+  const handleViewDetail = () => {
+    navigate("/orders/details", { state: { order, user } });
+  };
+
   return order.status === OrderStatus.pending ? (
     <Box sx={{ display: "flex", gap: 1, p: 1, flexDirection: "column" }}>
+      <Button
+        variant="contained"
+        fullWidth
+        color="success"
+        onClick={handleViewDetail}
+      >
+        Chi tiết đơn hàng
+      </Button>
       <LoadingButton
         fullWidth
         color="primary"
