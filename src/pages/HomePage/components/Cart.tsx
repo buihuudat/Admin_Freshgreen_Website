@@ -1,6 +1,5 @@
 import { Card, Metric, Text } from "@tremor/react";
 import { formattedAmount } from "../../../utils/handlers/formatMoney";
-import { Box } from "@mui/material";
 
 interface CartProps {
   title: string;

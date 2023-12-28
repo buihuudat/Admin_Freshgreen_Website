@@ -43,7 +43,7 @@ const HomeSwiper = (props: Props) => {
 
   const handleRemoveImage = (image: string) => {
     const imagesUpdated = [...images];
-    imagesUpdated.map((imageCurrent, index) => {
+    imagesUpdated.forEach((imageCurrent, index) => {
       if (imageCurrent === image) {
         imagesUpdated.splice(index, 1);
       }
@@ -105,6 +105,7 @@ const HomeSwiper = (props: Props) => {
                 <img
                   onClick={() => handleRemoveImage(image)}
                   src={image}
+                  alt=""
                   style={{
                     width: 700,
                     height: 400,

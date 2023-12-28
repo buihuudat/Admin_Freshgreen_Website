@@ -41,6 +41,7 @@ export default function CategoryTable(props: CategoryTableProps) {
         <img
           src={params.row.image}
           style={{ width: 50, height: 50, objectFit: "cover" }}
+          alt=""
         />
       ),
     },

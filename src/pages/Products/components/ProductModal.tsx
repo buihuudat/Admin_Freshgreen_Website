@@ -3,7 +3,6 @@ import {
   Button,
   CircularProgress,
   FormControlLabel,
-  FormGroup,
   Modal,
   Switch,
   TextField,
@@ -163,7 +162,7 @@ const ProductModal = () => {
     }
 
     images?.length &&
-      images?.map(({ data }: { data: any }) => {
+      images?.forEach(({ data }: { data: any }) => {
         setProduct((prevProduct) => ({
           ...prevProduct,
           images: [...prevProduct.images, data],

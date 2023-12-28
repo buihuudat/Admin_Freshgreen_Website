@@ -20,6 +20,19 @@ const Editor = memo((props: Props) => {
       width="100%"
       height="500"
       defaultValue={props.content}
+      setOptions={{
+        buttonList: [
+          ["undo", "redo"],
+          ["font", "fontSize", "formatBlock"],
+          ["bold", "underline", "italic", "strike", "subscript", "superscript"],
+          ["removeFormat"],
+          ["fontColor", "hiliteColor"],
+          ["indent", "outdent"],
+          ["align", "horizontalRule", "list", "table"],
+          ["link", "image", "video"],
+          ["fullScreen", "showBlocks", "codeView"],
+        ],
+      }}
     />
   );
 });

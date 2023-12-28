@@ -32,6 +32,7 @@ export const voucherSlice = createSlice({
         state.voucher = action.payload;
       })
       .addCase(voucherActions.update.fulfilled, (state, action) => {
+        // eslint-disable-next-line array-callback-return
         state.vouchers.find((voucher, index) => {
           if (voucher._id === action.payload._id) {
             state.vouchers[index] = action.payload;

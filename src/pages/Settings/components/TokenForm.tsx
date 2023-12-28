@@ -3,7 +3,6 @@ import { Box, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useAppDispatch } from "../../../redux/hooks";
 import { settingsActions } from "../../../actions/settingActions";
-import { EmailPortType } from "../../../utils/api/settingApi";
 import { NotificationToast } from "../../../utils/handlers/NotificationToast";
 
 const TokenForm = ({ tokenGPT }: { tokenGPT: string }) => {

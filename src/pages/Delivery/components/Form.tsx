@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
-import { Box, Paper, Typography, TextField, Switch } from "@mui/material";
-import { FormEvent, memo, useState } from "react";
+import { Box, Paper, Typography, TextField } from "@mui/material";
+import { FormEvent, memo } from "react";
 import { DeliveryType } from "../../../types/deliveryType";
 
 interface Props {

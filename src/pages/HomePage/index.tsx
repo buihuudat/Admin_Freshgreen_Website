@@ -15,7 +15,7 @@ import dayjs, { Dayjs } from "dayjs";
 import isBetweenPlugin from "dayjs/plugin/isBetween";
 import OrderTable from "./components/OrderTable";
 import { ProductType } from "../../types/productType";
-import TopUserTable, { OrderTableProps } from "./components/TopUserTable";
+import TopUserTable from "./components/TopUserTable";
 import { addressOfUser } from "../../types/userType";
 
 dayjs.extend(isBetweenPlugin);

@@ -59,17 +59,23 @@ const Products = () => {
 
   useEffect(() => {
     setOnFillered(true);
-    let newProducts = products;
-    if (shopSelected !== "") {
-      newProducts = products.filter(
+
+    let newProducts = [...products];
+
+    if (shopSelected) {
+      newProducts = newProducts.filter(
         (product) => product.shop._id === shopSelected
       );
     }
 
-    if (filterSelected !== "") {
-      newProducts = _.orderBy(products, [filterSelected], [filterBy]);
+    if (filterSelected) {
+      newProducts = _.orderBy(newProducts, [filterSelected], [filterBy]);
     }
-    newProducts = products.filter((product) => product.status === visibility);
+
+    newProducts = newProducts.filter(
+      (product) => product.status === visibility
+    );
+
     setFilterProductsList(newProducts);
   }, [shopSelected, products, filterBy, filterSelected, visibility]);
 
@@ -151,13 +157,13 @@ const Products = () => {
           </IconButton>
         )}
 
-        {/* <IconButton onClick={() => setChangeView(!changeView)}>
+        <IconButton onClick={() => setVisibility(!visibility)}>
           {visibility ? (
             <VisibilityIcon color={"success"} />
           ) : (
             <VisibilityOffIcon />
           )}
-        </IconButton> */}
+        </IconButton>
 
         <IconButton onClick={() => setChangeView(!changeView)}>
           {changeView ? (
