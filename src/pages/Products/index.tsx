@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   SpeedDial,
+  Typography,
 } from "@mui/material";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -172,6 +173,8 @@ const Products = () => {
             <ViewListIcon color={"success"} />
           )}
         </IconButton>
+
+        <Typography>Total: {filterProductsList.length} products</Typography>
       </Box>
 
       <Box
