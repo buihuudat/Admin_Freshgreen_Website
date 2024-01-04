@@ -4,13 +4,10 @@ import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useLocation, useNavigate } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
@@ -53,15 +50,6 @@ const closedMixin = (theme: Theme): CSSObject => ({
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -189,7 +177,7 @@ const UserInfo: React.FC<UserInfoProps> = React.memo(({ open }) => {
     <Card
       variant="outlined"
       sx={{
-        py: 3,
+        py: 2,
         display: "flex",
         justifyContent: "center",
         flexDirection: "column",
@@ -224,7 +212,7 @@ const UserInfo: React.FC<UserInfoProps> = React.memo(({ open }) => {
 });
 
 export default function Sidebar() {
-  const [open, setOpen] = React.useState(true);
+  const open = true;
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -236,15 +224,21 @@ export default function Sidebar() {
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <Typography fontWeight={600} fontSize={23} color={mainColor}>
-            {open ? "FreshGreen" : ""}
-          </Typography>
-          <IconButton onClick={() => setOpen(!open)}>
-            {!open ? <FormatListBulletedIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </DrawerHeader>
+      <Drawer variant="permanent" open={true}>
+        <Typography
+          fontWeight={600}
+          fontSize={23}
+          color={mainColor}
+          align="center"
+          sx={{
+            py: 1,
+            cursor: "pointer",
+          }}
+          onClick={() => navigate("https://freshgreen.vercel.app")}
+        >
+          FreshGreen
+        </Typography>
+
         <Divider />
         <List>
           {sidebarData.map((data, index) => (

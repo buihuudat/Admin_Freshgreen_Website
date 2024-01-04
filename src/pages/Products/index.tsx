@@ -29,6 +29,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import _ from "lodash";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const dataFilter: Array<{ by: string }> = [
   { by: "createdAt" },
@@ -96,6 +97,16 @@ const Products = () => {
 
   const handleResetFiler = () => {
     setShopSelected("");
+  };
+
+  const handleExportToExcel = () => {
+    // exportExcel(products, "products")
+    //   .then(() => {
+    //     toast.success("Export to excel success");
+    //   })
+    //   .catch(() => {
+    //     toast.error("Export to excel failed");
+    //   });
   };
 
   return isLoading ? (
@@ -175,6 +186,12 @@ const Products = () => {
         </IconButton>
 
         <Typography>Total: {filterProductsList.length} products</Typography>
+
+        {/* export excel */}
+
+        <IconButton color={"success"} onClick={handleExportToExcel}>
+          <FileDownloadIcon />
+        </IconButton>
       </Box>
 
       <Box

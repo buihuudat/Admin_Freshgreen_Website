@@ -23,8 +23,9 @@ export default function Settings() {
   return isLoading ? (
     <LinearProgress />
   ) : (
-    <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+    <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} gap={3}>
       <HomeSwiper settings={data.settings} user={user} />
+
       <Banner />
 
       <EmailForm {...data.settings.emailSendPort} />
