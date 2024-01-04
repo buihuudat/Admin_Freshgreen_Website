@@ -3,7 +3,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ToastContainer } from "react-toastify";
 import NotFound from "./pages/NotFound";
-import { colorSystem } from "./utils/handlers/getSystemColor";
 import { lazy } from "react";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -29,7 +28,7 @@ const Unit = lazy(() => import("./pages/Unit"));
 const App = () => {
   const theme = createTheme({
     palette: {
-      mode: colorSystem() || "dark",
+      mode: "dark",
     },
   });
 
