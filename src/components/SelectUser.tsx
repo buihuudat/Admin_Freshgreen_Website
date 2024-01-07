@@ -19,7 +19,7 @@ interface SeletedUserProps {
 const SelectUser = (props: SeletedUserProps) => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state: RootState) => state.user.users).filter(
-    (user) => user.role !== UserRole.producer
+    (user) => user.permissions?.name! !== UserRole.producer
   );
 
   useEffect(() => {

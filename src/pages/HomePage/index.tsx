@@ -22,6 +22,7 @@ dayjs.extend(isBetweenPlugin);
 
 const HomePage = () => {
   const orderData = useAppSelector((state: RootState) => state.order.data);
+
   const [select, setSelect] = useState<"day" | "month" | "year">("day");
   const [orders, setOrders] = useState<OrderType[]>(orderData);
   const [date, setDate] = useState<Dayjs | null>(

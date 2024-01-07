@@ -15,6 +15,7 @@ import moment from "moment";
 import { UserRole, UserType } from "../../types/userType";
 
 export default function Users() {
+  const user = useAppSelector((state) => state.user.user);
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 250 },
     { field: "firstname", headerName: "First name", width: 130 },
@@ -23,18 +24,26 @@ export default function Users() {
     { field: "email", headerName: "Email", width: 250 },
     { field: "phone", headerName: "Phone", width: 180 },
     { field: "createdAt", headerName: "Join Time", width: 250 },
-    { field: "role", headerName: "Role", width: 90 },
+    { field: "role", headerName: "Role", width: 100 },
     {
       field: "action",
       headerName: "Action",
       width: 200,
-      renderCell: (params: GridRenderCellParams) => (
-        <ActionButton
-          isDeleteLoading={isDeleteLoading}
-          setIsDeleteLoading={setIsDeleteLoading}
-          rowData={params.row}
-        />
-      ),
+      renderCell: (params: GridRenderCellParams) => {
+        if (
+          user.permissions?.name === UserRole.superadmin ||
+          (params.row.permissions?.name !== UserRole.admin &&
+            params.row.permissions?.name !== UserRole.superadmin)
+        ) {
+          return (
+            <ActionButton
+              isDeleteLoading={isDeleteLoading}
+              setIsDeleteLoading={setIsDeleteLoading}
+              rowData={params.row}
+            />
+          );
+        }
+      },
     },
   ];
   const dispatch = useAppDispatch();
@@ -57,6 +66,9 @@ export default function Users() {
         ...user,
         firstname: user.fullname?.firstname,
         lastname: user.fullname?.lastname,
+        role: user.permissions?.name,
+        phone: user.phone.includes("social") ? "" : user.phone,
+        createdAt: moment(user.createdAt).format("lll"),
       }));
 
       const today = moment().startOf("day");
@@ -76,7 +88,8 @@ export default function Users() {
   const adminList = React.useMemo(() => {
     return users.filter(
       (user) =>
-        user.role === UserRole.admin || user.role === UserRole.superadmin
+        user.permissions?.name! === UserRole.admin ||
+        user.permissions?.name! === UserRole.superadmin
     );
   }, [users]);
 

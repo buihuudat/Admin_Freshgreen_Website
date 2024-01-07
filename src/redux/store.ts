@@ -13,6 +13,7 @@ import notificationSlice from "./slices/notificationSlice";
 import messageSlice from "./slices/messageSlice";
 import unitSlice from "./slices/unitSlice";
 import deliverySlice from "./slices/deliverySlice";
+import roleSlice from "./slices/roleSlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ export const store = configureStore({
     notifications: notificationSlice,
     delivery: deliverySlice,
     messages: messageSlice,
+    role: roleSlice,
   },
 });
 

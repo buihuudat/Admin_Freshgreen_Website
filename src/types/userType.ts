@@ -1,3 +1,5 @@
+import { RoleType, initialRole } from "./roleType";
+
 interface UserAddress {
   city: string;
   district: string;
@@ -28,7 +30,7 @@ export interface UserType {
   password?: string;
   avatar?: string;
   address: UserAddress;
-  role: UserRole;
+  permissions?: RoleType;
   following?: Array<string>;
   createdAt?: string;
   updatedAt?: string;
@@ -51,7 +53,7 @@ export const InitialUser: UserType = {
     street: "",
     more: "",
   },
-  role: UserRole.user,
+  permissions: initialRole,
   following: [""],
 };
 

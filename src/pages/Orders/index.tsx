@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
-import { Box, LinearProgress, Typography } from "@mui/material";
 import OrderItem from "./components/OrderItem";
 import Tabs from "./components/Tabs";
 import { OrderStatus } from "../../types/orderType";
@@ -60,7 +60,12 @@ const Orders = () => {
         sx={{ backdropFilter: "blur(50px)" }}
         width={"100%"}
       >
+        <Button disabled sx={{ width: 200 }}>
+          {ordersFilter.length} orders
+        </Button>
+
         <Tabs value={value} setValue={setValue} />
+
         <Search
           placeholder={"Customer..."}
           searchQuery={searchQuery}

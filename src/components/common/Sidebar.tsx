@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -8,7 +10,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useLocation, useNavigate } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
@@ -21,13 +22,17 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import TagIcon from "@mui/icons-material/Tag";
-import { mainColor } from "../../resources/color";
 import { Avatar, Button, Card, Typography } from "@mui/material";
-import { useAppSelector } from "../../redux/hooks";
-import { authAction } from "../../actions/authActions";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+import RuleIcon from "@mui/icons-material/Rule";
+
+import { mainColor } from "../../resources/color";
+import { useAppSelector } from "../../redux/hooks";
+import { authAction } from "../../actions/authActions";
 import { RootState } from "../../redux/store";
+import { UserRole, UserType } from "../../types/userType";
+
 const drawerWidth = 200;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -75,6 +80,12 @@ const sidebarData = [
     path: "/",
     badge: 0,
     active: true,
+    access: [
+      UserRole.admin,
+      UserRole.superadmin,
+      UserRole.staff,
+      UserRole.producer,
+    ],
   },
   {
     icon: <ShoppingBasketIcon />,
@@ -82,6 +93,12 @@ const sidebarData = [
     path: "/orders",
     badge: 0,
     active: true,
+    access: [
+      UserRole.admin,
+      UserRole.superadmin,
+      UserRole.staff,
+      UserRole.producer,
+    ],
   },
 ];
 
@@ -92,6 +109,7 @@ const sidebarHandleData = [
     path: "/users",
     badge: 0,
     active: true,
+    access: [UserRole.admin, UserRole.superadmin],
   },
 
   {
@@ -100,6 +118,12 @@ const sidebarHandleData = [
     path: "/products",
     badge: 0,
     active: true,
+    access: [
+      UserRole.admin,
+      UserRole.superadmin,
+      UserRole.staff,
+      UserRole.producer,
+    ],
   },
   {
     icon: <NewspaperIcon />,
@@ -107,6 +131,12 @@ const sidebarHandleData = [
     path: "/news",
     badge: 0,
     active: true,
+    access: [
+      UserRole.admin,
+      UserRole.superadmin,
+      UserRole.staff,
+      UserRole.producer,
+    ],
   },
   {
     icon: <StorefrontIcon />,
@@ -114,6 +144,7 @@ const sidebarHandleData = [
     path: "/shops",
     badge: 0,
     active: true,
+    access: [UserRole.admin, UserRole.superadmin],
   },
   {
     icon: <LocalOfferIcon />,
@@ -121,6 +152,12 @@ const sidebarHandleData = [
     path: "/vouchers",
     badge: 0,
     active: true,
+    access: [
+      UserRole.admin,
+      UserRole.superadmin,
+      UserRole.staff,
+      UserRole.producer,
+    ],
   },
   {
     icon: <CategoryIcon />,
@@ -128,6 +165,7 @@ const sidebarHandleData = [
     path: "/categories",
     badge: 0,
     active: true,
+    access: [UserRole.admin, UserRole.superadmin],
   },
   {
     icon: <TagIcon />,
@@ -135,6 +173,7 @@ const sidebarHandleData = [
     path: "/tags",
     badge: 0,
     active: true,
+    access: [UserRole.admin, UserRole.superadmin],
   },
   {
     icon: <AcUnitIcon />,
@@ -142,6 +181,7 @@ const sidebarHandleData = [
     path: "/unit",
     badge: 0,
     active: true,
+    access: [UserRole.admin, UserRole.superadmin],
   },
   {
     icon: <NotificationsIcon />,
@@ -149,6 +189,7 @@ const sidebarHandleData = [
     path: "/notifications",
     badge: 0,
     active: true,
+    access: [UserRole.admin, UserRole.superadmin],
   },
   {
     icon: <DeliveryDiningIcon />,
@@ -156,6 +197,15 @@ const sidebarHandleData = [
     path: "/delivery",
     badge: 0,
     active: true,
+    access: [UserRole.admin, UserRole.superadmin],
+  },
+  {
+    icon: <RuleIcon />,
+    text: "Roles",
+    path: "/roles",
+    badge: 0,
+    active: true,
+    access: [UserRole.superadmin],
   },
   {
     icon: <SettingsIcon />,
@@ -163,15 +213,16 @@ const sidebarHandleData = [
     path: "/settings",
     badge: 0,
     active: true,
+    access: [UserRole.superadmin],
   },
 ];
 
 interface UserInfoProps {
   open: boolean;
+  user: UserType;
 }
 
-const UserInfo: React.FC<UserInfoProps> = React.memo(({ open }) => {
-  const user = useAppSelector((state) => state.user.user);
+const UserInfo: React.FC<UserInfoProps> = React.memo(({ open, user }) => {
   const navigate = useNavigate();
   return (
     <Card
@@ -204,7 +255,7 @@ const UserInfo: React.FC<UserInfoProps> = React.memo(({ open }) => {
       {open && (
         <Typography>
           Role:
-          <b> {user?.role}</b>
+          <b> {user?.permissions?.name}</b>
         </Typography>
       )}
     </Card>
@@ -215,7 +266,7 @@ export default function Sidebar() {
   const open = true;
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
+  const user = useAppSelector((state: RootState) => state.user.user);
   const orders = useAppSelector((state: RootState) => state.order.data);
   const orderBadge = React.useMemo(
     () => orders.filter((order) => order.order.status === "pending").length,
@@ -234,76 +285,84 @@ export default function Sidebar() {
             py: 1,
             cursor: "pointer",
           }}
-          onClick={() => navigate("https://freshgreen.vercel.app")}
+          onClick={() =>
+            (window.location.href = "https://freshgreen.vercel.app")
+          }
         >
           FreshGreen
         </Typography>
 
         <Divider />
         <List>
-          {sidebarData.map((data, index) => (
-            <ListItem key={index} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2,
-                  background: pathname === data.path ? mainColor : "",
-                }}
-                onClick={() => navigate(data.path)}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {data.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={data.text}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-                {data.text === "Orders" && (
-                  <Typography>{orderBadge}</Typography>
-                )}
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {sidebarData.map(
+            (data, index) =>
+              data.access.includes(user.permissions?.name as UserRole) && (
+                <ListItem key={index} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2,
+                      background: pathname === data.path ? mainColor : "",
+                    }}
+                    onClick={() => navigate(data.path)}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {data.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={data.text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                    {data.text === "Orders" && (
+                      <Typography>{orderBadge}</Typography>
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              )
+          )}
         </List>
         <Divider />
         <List sx={{ overflow: "auto" }}>
-          {sidebarHandleData.map((data, index) => (
-            <ListItem key={index} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 45,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2,
-                  background: pathname === data.path ? mainColor : "",
-                }}
-                onClick={() => navigate(data.path)}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {data.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={data.text}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {sidebarHandleData.map(
+            (data, index) =>
+              data.access.includes(user.permissions?.name as UserRole) && (
+                <ListItem key={index} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 45,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2,
+                      background: pathname === data.path ? mainColor : "",
+                    }}
+                    onClick={() => navigate(data.path)}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {data.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={data.text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              )
+          )}
         </List>
         <Box sx={{ mt: "auto" }}>
-          <UserInfo open={open} />
+          <UserInfo open={open} user={user} />
           <Button
             variant="outlined"
             color="info"

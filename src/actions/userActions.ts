@@ -72,4 +72,20 @@ export const userActions = {
       throw error;
     }
   }),
+
+  updateRole: createAsyncThunk<any, { userId: string; permissions: string }>(
+    "user/role",
+    async ({ userId, permissions }, thunkAPI) => {
+      try {
+        const res = await userApi.updateRole(userId, permissions);
+        return res.data;
+      } catch (error: any) {
+        if (error.data) {
+          NotificationToast({ message: error.data, type: "error" });
+          return thunkAPI.rejectWithValue(error.data);
+        }
+        throw error;
+      }
+    }
+  ),
 };

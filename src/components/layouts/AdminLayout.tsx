@@ -16,6 +16,8 @@ import {
 import PopupMessage from "../PopupMessage";
 import { RootState } from "../../redux/store";
 import { messageActions } from "../../actions/messageAction";
+import { UserRole, UserType } from "../../types/userType";
+import { roleActions } from "../../actions/roleActions";
 
 const AdminLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,23 +29,33 @@ const AdminLayout = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const isAuth = await verifyToken();
-      if (isAuth && isAuth.role === "admin") {
-        setIsLoading(false);
+      const isAuth: UserType = await verifyToken();
 
+      if (
+        (isAuth && isAuth.permissions?.name === UserRole.admin) ||
+        isAuth.permissions?.name === UserRole.superadmin ||
+        isAuth.permissions?.name === UserRole.producer ||
+        isAuth.permissions?.name === UserRole.staff
+      ) {
+        setIsLoading(false);
         dispatch(setUserReducer(isAuth));
         dispatch(settingsActions.getSetting(isAuth._id!));
         dispatch(orderActions.gets(isAuth._id!));
         dispatch(messageActions.gets(isAuth._id!));
+        dispatch(roleActions.gets());
         requestPermissionNotification(isAuth._id!);
-
-        socket.emit("admin-connect", {
-          username: isAuth.username,
-          id: isAuth._id,
-        });
+        if (
+          (isAuth && isAuth.permissions?.name === UserRole.admin) ||
+          isAuth.permissions?.name === UserRole.superadmin
+        ) {
+          socket.emit("admin-connect", {
+            username: isAuth.username,
+            id: isAuth._id,
+          });
+        }
       } else {
         NotificationToast({
-          message: "You are not Administractor",
+          message: "You are not permissions",
           type: "error",
         });
         navigate("/login");

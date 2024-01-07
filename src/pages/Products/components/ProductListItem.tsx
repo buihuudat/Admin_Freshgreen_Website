@@ -5,13 +5,17 @@ import { formatDateInput } from "../../../utils/handlers/formatDateInput";
 import { formattedAmount } from "../../../utils/handlers/formatMoney";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { productActions } from "../../../actions/productActions";
 import EditIcon from "@mui/icons-material/Edit";
 import { setProductModal } from "../../../redux/slices/productSlice";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { RootState } from "../../../redux/store";
+import { RoleEnum } from "../../../types/roleType";
+
 const ProductListItem = memo(({ product }: { product: ProductType }) => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user.user);
 
   const handleEdit = useCallback(() => {
     dispatch(setProductModal({ open: true, data: product }));
@@ -152,13 +156,17 @@ const ProductListItem = memo(({ product }: { product: ProductType }) => {
                   justifyContent: "space-around",
                 }}
               >
-                <IconButton color="error" onClick={handleDelete}>
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton color="warning" onClick={handleEdit}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton color="primary">
+                {user.permissions?.roles.includes(RoleEnum.Delete) && (
+                  <IconButton color="error" onClick={handleDelete}>
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+                {user.permissions?.roles.includes(RoleEnum.Update) && (
+                  <IconButton color="warning" onClick={handleEdit}>
+                    <EditIcon />
+                  </IconButton>
+                )}
+                <IconButton color="primary" disabled>
                   {product.status ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </IconButton>
               </Box>

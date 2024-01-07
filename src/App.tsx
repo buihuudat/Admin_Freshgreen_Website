@@ -1,10 +1,11 @@
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ToastContainer } from "react-toastify";
 import NotFound from "./pages/NotFound";
-import { lazy } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 
 const Login = lazy(() => import("./pages/Login"));
 const AdminLayout = lazy(() => import("./components/layouts/AdminLayout"));
@@ -24,6 +25,7 @@ const Settings = lazy(() => import("./pages/Settings"));
 const Notifications = lazy(() => import("./pages/Notification"));
 const Delivery = lazy(() => import("./pages/Delivery"));
 const Unit = lazy(() => import("./pages/Unit"));
+const Roles = lazy(() => import("./pages/Roles"));
 
 const App = () => {
   const theme = createTheme({
@@ -36,6 +38,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Toaster />
       <ToastContainer />
       <CssBaseline />
       <Routes>
@@ -53,8 +56,9 @@ const App = () => {
           <Route path="/unit" element={<Unit />} />
           <Route path="/tags" element={<Tags />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/Notifications" element={<Notifications />} />
-          <Route path="/Delivery" element={<Delivery />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/delivery" element={<Delivery />} />
+          <Route path="/roles" element={<Roles />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
         <Route path="/" element={<AuthLayout />}>

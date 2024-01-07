@@ -7,37 +7,15 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import { ShopType } from "../../../types/shopType";
-import { userApi } from "../../../utils/api/userApi";
-import { UserType } from "../../../types/userType";
 import { notImage } from "../../../resources/images";
 import moment from "moment";
 
 const ShopItem = memo(({ shop }: { shop: ShopType }) => {
-  const [userInfo, setUserInfo] = useState<UserType>();
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await userApi.getUser(
-          typeof shop.user !== "string" ? shop.user._id! : shop.user
-        );
-        if (res.data) setUserInfo(res.data);
-      } catch (error) {
-        return false;
-      }
-    };
-    getUser();
-  }, [shop.user]);
-
   const handleView = () => {
     console.log("viewing");
   };
-
-  // const handleDelete = async () => {
-  //   dispatch(newsActions.delete(props.news._id as string));
-  // };
 
   return (
     <Box>
@@ -66,9 +44,17 @@ const ShopItem = memo(({ shop }: { shop: ShopType }) => {
               p: 1,
             }}
           >
-            <Avatar src={userInfo?.avatar} alt={userInfo?.username} />
+            <Avatar
+              src={typeof shop?.user === "string" ? "" : shop.user?.avatar}
+              alt={"avatar"}
+            />
             <Typography fontWeight={600}>
-              {userInfo?.fullname.firstname + " " + userInfo?.fullname.lastname}
+              {typeof shop?.user === "string"
+                ? ""
+                : shop.user?.fullname.firstname + " " + typeof shop?.user ===
+                  "string"
+                ? ""
+                : shop.user?.fullname.lastname}
             </Typography>
           </Paper>
 

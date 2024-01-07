@@ -34,9 +34,9 @@ const initialErrText: {
 
 const Profile = () => {
   const dispatch = useAppDispatch();
-  const isRole = useAppSelector((state) => state.user.user)?.role;
+  const isRole = useAppSelector((state) => state.user.user)?.permissions?.name!;
   const { state: userState } = useLocation();
-  const user = useAppSelector((state) => {
+  const user: UserType = useAppSelector((state) => {
     if (userState) {
       return userState.user;
     } else {
@@ -47,7 +47,6 @@ const Profile = () => {
   const [imageSelected, setImageSelected] = useState<string>("");
   const [avatarChanging, setAvatarChanging] = useState(false);
   const [dataAddress, setDataAddress] = useState([]);
-  const [role, setRole] = useState<string | undefined>(user.role);
   const [address, setAddress] = useState<AddressProps>(
     {
       city: user?.address?.city || "",
@@ -121,16 +120,17 @@ const Profile = () => {
 
     const data: UserType = {
       _id: user?._id,
-      username: formData.get("username") || user?.username,
-      phone: formData.get("phone") || user?.phone,
-      email: formData.get("email") || user?.email,
+      username: (formData.get("username") as string) || user?.username,
+      phone: (formData.get("phone") as string) || user?.phone,
+      email: (formData.get("email") as string) || user?.email,
       password: formData.get("password") as string,
       fullname: {
-        firstname: formData.get("firstname") || user?.fullname?.firstname,
-        lastname: formData.get("lastname") || user?.fullname?.lastname,
+        firstname:
+          (formData.get("firstname") as string) || user?.fullname?.firstname,
+        lastname:
+          (formData.get("lastname") as string) || user?.fullname?.lastname,
       },
       address,
-      role: role as UserRole,
     };
 
     let err: boolean = false;
@@ -198,6 +198,10 @@ const Profile = () => {
       });
   };
 
+  const handleUpdateRole = async (permissions: string) => {
+    await dispatch(userActions.updateRole({ userId: user._id!, permissions }));
+  };
+
   const handleDisable = useCallback(() => {
     setIsDisable(!isDisable);
   }, [isDisable]);
@@ -221,7 +225,7 @@ const Profile = () => {
           _id: user?._id,
           image: result,
         });
-        dispatch(userChangeAvatar({ _id: user?._id, avatar: result }));
+        dispatch(userChangeAvatar({ _id: user?._id!, avatar: result }));
         setImageSelected(result);
       } catch (error) {
       } finally {
@@ -264,7 +268,7 @@ const Profile = () => {
         </IconButton>
       )}
 
-      <Typography>({user?.role})</Typography>
+      <Typography>({user?.permissions?.name})</Typography>
 
       <Typography fontSize={32}>
         Hello {user?.fullname?.firstname} {user?.fullname?.lastname}
@@ -418,7 +422,11 @@ const Profile = () => {
 
           {/* select role */}
           {(isRole === UserRole.admin || isRole === UserRole.superadmin) && (
-            <SelectRole role={role} setRole={setRole} isDisable={isDisable} />
+            <SelectRole
+              role={user?.permissions?._id!}
+              isDisable={isDisable}
+              onUpdateRole={handleUpdateRole}
+            />
           )}
 
           <LoadingButton

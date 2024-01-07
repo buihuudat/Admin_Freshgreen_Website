@@ -28,6 +28,7 @@ export const authAction = {
 
   logout: (props: LogoutProps) => {
     removeToken();
-    props.navigate("/login");
+    window.location.href = "/login";
+    // props.navigate("/login");
   },
 };

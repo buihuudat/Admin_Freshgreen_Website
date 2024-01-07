@@ -5,6 +5,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { LoadingButton } from "@mui/lab";
 import Search from "../../../components/common/Search";
 import { TagActionsType } from "../../../actions/tagActions";
+import { useAppSelector } from "../../../redux/hooks";
+import { RootState } from "../../../redux/store";
+import { allowDeleteTag } from "../../../resources/permissions";
+import { UserRole } from "../../../types/userType";
 
 interface ActionButtonProps {
   tag: TagActionsType;
@@ -31,6 +35,7 @@ interface TagTableProps {
 }
 
 export default function CategoryTable(props: TagTableProps) {
+  const user = useAppSelector((state: RootState) => state.user.user);
   const columns: GridColDef[] = [
     { field: "_id", headerName: "ID", width: 250 },
     { field: "name", headerName: "Name", width: 100 },
@@ -39,13 +44,14 @@ export default function CategoryTable(props: TagTableProps) {
       field: "action",
       headerName: "Action",
       width: 200,
-      renderCell: (params: GridRenderCellParams) => (
-        <ActionButton
-          tag={params.row}
-          onDelete={props.onDelete}
-          isPending={props.isPending}
-        />
-      ),
+      renderCell: (params: GridRenderCellParams) =>
+        allowDeleteTag.includes(user.permissions?.name as UserRole) && (
+          <ActionButton
+            tag={params.row}
+            onDelete={props.onDelete}
+            isPending={props.isPending}
+          />
+        ),
     },
   ];
   const [searchQuery, setSearchQuery] = React.useState<string>("");

@@ -14,4 +14,7 @@ export const userApi = {
   getUsers: () => axiosClient.get("/users/gets"),
 
   getUser: (id: string) => axiosClient.get(`/users/${id}`),
+
+  updateRole: (userId: string, permissions: string) =>
+    axiosClient.put(`/users/${userId}/role`, { permissions }),
 };

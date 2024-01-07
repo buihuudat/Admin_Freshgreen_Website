@@ -1,59 +1,38 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useAppSelector } from "../../../redux/hooks";
+import { RootState } from "../../../redux/store";
+import { memo } from "react";
 
 interface SelectRoleProps {
-  role: string | undefined;
-  setRole: (role: string) => void;
+  role: string;
   isDisable: boolean;
+  onUpdateRole: (permissions: string) => void;
 }
 
-interface roleDataType {
-  role?: string;
-  value: string;
-}
+const SelectRole = memo((props: SelectRoleProps) => {
+  const roles = useAppSelector((state: RootState) => state.role.roles);
 
-const roleData: roleDataType[] = [
-  {
-    role: "user",
-    value: "Người dùng",
-  },
-  {
-    role: "staff",
-    value: "Nhân viên",
-  },
-  // {
-  //   role: "producer",
-  //   value: "Chủ cửa hàng",
-  // },
-  {
-    role: "admin",
-    value: "Quản trị viên",
-  },
-  {
-    role: "superadmin",
-    value: "Siêu Quản trị viên",
-  },
-];
-
-const SelectRole = (props: SelectRoleProps) => {
   return (
     <FormControl fullWidth>
       <InputLabel id="demo-simple-select-label">Quyền</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={props.role}
+        defaultValue={props.role}
         label="Quyền"
         disabled={!props.isDisable}
-        onChange={(e) => props.setRole(e.target.value)}
+        onChange={(e) => {
+          props.onUpdateRole(e.target.value);
+        }}
       >
-        {roleData.map((data) => (
-          <MenuItem key={data.role} value={data.role}>
-            {data.value}
+        {roles.map((data) => (
+          <MenuItem key={data._id} value={data._id}>
+            {data.name}
           </MenuItem>
         ))}
       </Select>
     </FormControl>
   );
-};
+});
 
 export default SelectRole;
