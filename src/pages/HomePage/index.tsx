@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, LinearProgress, Paper, Typography } from "@mui/material";
 import Area from "./components/chart/Area";
 import CartItem from "./components/Cart";
 import PieChart from "./components/chart/Pie";
@@ -262,30 +262,36 @@ const HomePage = () => {
         />
       </Box>
 
-      <Box py={3}>
-        <Area data={chartdata} spend={spend} />
-      </Box>
+      {orderData.length ? (
+        <Box>
+          <Box py={3}>
+            <Area data={chartdata} spend={spend} />
+          </Box>
 
-      <Box display={"flex"} flexDirection={"row"} gap={3}>
-        <PieChart data={pieData} />
-        <Bar data={barData} />
-        <Paper
-          sx={{
-            background: "#111827",
-            borderRadius: 2,
-          }}
-        >
-          <Date setDate={setDate} />
-        </Paper>
-      </Box>
+          <Box display={"flex"} flexDirection={"row"} gap={3}>
+            <PieChart data={pieData} />
+            <Bar data={barData} />
+            <Paper
+              sx={{
+                background: "#111827",
+                borderRadius: 2,
+              }}
+            >
+              <Date setDate={setDate} />
+            </Paper>
+          </Box>
 
-      <Box my={3}>
-        <OrderTable data={_.orderBy(orderTable, ["sold"], "desc")} />
-      </Box>
+          <Box my={3}>
+            <OrderTable data={_.orderBy(orderTable, ["sold"], "desc")} />
+          </Box>
 
-      <Box>
-        <TopUserTable data={topUserData} />
-      </Box>
+          <Box>
+            <TopUserTable data={topUserData} />
+          </Box>
+        </Box>
+      ) : (
+        <LinearProgress color="success" />
+      )}
     </Box>
   );
 };
