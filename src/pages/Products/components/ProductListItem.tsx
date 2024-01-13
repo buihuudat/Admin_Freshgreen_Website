@@ -92,6 +92,15 @@ const ProductListItem = memo(({ product }: { product: ProductType }) => {
             >
               view:{product.views}
             </Typography>
+            <Typography
+              fontSize={"13"}
+              fontStyle={"italic"}
+              fontWeight={600}
+              color={"red"}
+            >
+              Thu:
+              {formattedAmount(product.sold ? product.sold * product.price : 0)}
+            </Typography>
           </Box>
         </Box>
 

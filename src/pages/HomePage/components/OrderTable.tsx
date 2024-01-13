@@ -43,6 +43,7 @@ const OrderTable = ({ data }: { data: OrderTableProps[] }) => (
           {/* <TableHeaderCell>Số lượng</TableHeaderCell> */}
           <TableHeaderCell>Lượt xem</TableHeaderCell>
           <TableHeaderCell>Đã bán</TableHeaderCell>
+          <TableHeaderCell>Tổng thu</TableHeaderCell>
           <TableHeaderCell>Status</TableHeaderCell>
         </TableRow>
       </TableHead>
@@ -70,6 +71,9 @@ const OrderTable = ({ data }: { data: OrderTableProps[] }) => (
             {/* <TableCell>{item.quantity}</TableCell> */}
             <TableCell>{item.view}</TableCell>
             <TableCell>{item.sold}</TableCell>
+            <TableCell>
+              {item.sold ? formattedAmount(item.sold * item.price) : ""}
+            </TableCell>
             <TableCell>
               <Badge color="emerald" icon={StatusOnlineIcon}>
                 {item.status}
