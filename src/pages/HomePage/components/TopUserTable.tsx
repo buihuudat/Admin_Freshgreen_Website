@@ -10,7 +10,8 @@ import {
   Title,
 } from "@tremor/react";
 import { formattedAmount } from "../../../utils/handlers/formatMoney";
-import { Avatar } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
+import ButtonExportToExcel from "../../../components/ButtonExportToExcel";
 
 export interface OrderTableProps {
   id: string;
@@ -25,7 +26,10 @@ export interface OrderTableProps {
 
 const TopUserTable = ({ data }: { data: OrderTableProps[] }) => (
   <Card>
-    <Title>Top người dùng</Title>
+    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <Title>Top người dùng</Title>
+      <ButtonExportToExcel data={data} fileName="Top người dùng" />
+    </Box>
     <Table className="mt-5">
       <TableHead>
         <TableRow>

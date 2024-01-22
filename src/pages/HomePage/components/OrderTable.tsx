@@ -12,6 +12,8 @@ import {
   Badge,
 } from "@tremor/react";
 import { formattedAmount } from "../../../utils/handlers/formatMoney";
+import { Box } from "@mui/material";
+import ButtonExportToExcel from "../../../components/ButtonExportToExcel";
 
 interface OrderTableProps {
   id: string;
@@ -29,7 +31,10 @@ interface OrderTableProps {
 
 const OrderTable = ({ data }: { data: OrderTableProps[] }) => (
   <Card>
-    <Title>Top những sản phẩm bán chạy</Title>
+    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <Title>Top những sản phẩm bán chạy</Title>
+      <ButtonExportToExcel data={data} fileName="Top những sản phẩm bán chạy" />
+    </Box>
     <Table className="mt-5">
       <TableHead>
         <TableRow>

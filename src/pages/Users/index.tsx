@@ -13,6 +13,8 @@ import { RootState } from "../../redux/store";
 import { ActionButton } from "./components/ActionButton";
 import moment from "moment";
 import { UserRole, UserType } from "../../types/userType";
+import { exportExcel } from "../../utils/handlers/exportExcel";
+import ButtonExportToExcel from "../../components/ButtonExportToExcel";
 
 export default function Users() {
   const user = useAppSelector((state) => state.user.user);
@@ -139,9 +141,18 @@ export default function Users() {
           {isPending && <CircularProgress size={20} />}
         </Box>
         <Box>
-          <Typography fontWeight={600}>
-            Có tổng cộng {dataReSearch.length} người dùng
-          </Typography>
+          <Box
+            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+          >
+            <Typography fontWeight={600}>
+              Có tổng cộng {dataReSearch.length} người dùng
+            </Typography>
+            <ButtonExportToExcel
+              data={dataReSearch}
+              fileName="Danh sách người dùng"
+            />
+          </Box>
+
           <DataGrid
             getRowId={(user) => user._id}
             sortModel={[{ field: "createdAt", sort: "desc" }]}

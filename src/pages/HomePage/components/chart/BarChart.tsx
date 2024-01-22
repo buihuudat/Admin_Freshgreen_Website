@@ -1,4 +1,6 @@
+import { Box } from "@mui/material";
 import { Card, Title, BarChart } from "@tremor/react";
+import ButtonExportToExcel from "../../../../components/ButtonExportToExcel";
 
 interface BarProps {
   name: string;
@@ -11,7 +13,14 @@ const dataFormatter = (number: number) => {
 
 const Bar = ({ data }: { data: BarProps[] }) => (
   <Card className="max-width">
-    <Title>Tổng doanh thu theo sản phẩm</Title>
+    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <Title>Tổng doanh thu theo sản phẩm</Title>
+
+      <ButtonExportToExcel
+        data={data}
+        fileName="Tổng doanh thu theo sản phẩm"
+      />
+    </Box>
     <BarChart
       className="mt-6"
       data={data}

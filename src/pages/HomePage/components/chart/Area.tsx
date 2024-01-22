@@ -1,4 +1,6 @@
+import { Box } from "@mui/material";
 import { Card, Title, AreaChart } from "@tremor/react";
+import ButtonExportToExcel from "../../../../components/ButtonExportToExcel";
 
 const dataFormatter = (number: number) => {
   return "vnd " + Intl.NumberFormat("vn").format(number).toString();
@@ -19,9 +21,15 @@ interface SpendProps {
 const Area = ({ data, spend }: { data: AreaProps[]; spend: SpendProps }) => {
   return (
     <Card>
-      <Title>
-        Thống kê {spend.name} {spend.value}
-      </Title>
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+        <Title>
+          Thống kê {spend.name} {spend.value}
+        </Title>
+        <ButtonExportToExcel
+          data={data}
+          fileName={`Thống kê doanh thu ${spend.name} ${spend.value}`}
+        />
+      </Box>
       <AreaChart
         className="h-72 mt-4"
         data={data}
